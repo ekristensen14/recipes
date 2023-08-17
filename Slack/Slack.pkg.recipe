@@ -1,3 +1,28 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c6975fed24342d03f1d3d003c50c3f5cfca63e9146cfdf410c690c406fb753dd
-size 810
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Comment</key>
+	<string>Created with Recipe Robot v2.2.0 (https://github.com/homebysix/recipe-robot)</string>
+	<key>Description</key>
+	<string>Downloads the latest version of Slack and creates a package.</string>
+	<key>Identifier</key>
+	<string>com.github.ekristensen14.pkg.Slack</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Slack</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>ParentRecipe</key>
+	<string>com.github.ekristensen14.download.Slack</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>AppPkgCreator</string>
+		</dict>
+	</array>
+</dict>
+</plist>
