@@ -48,8 +48,38 @@
 			<string>AppDmgVersioner</string>
 		</dict>
 		<dict>
-			<key>app_file</key>
-			<string>%</string>
+			<key>Arguments</key>
+			<dict>
+				<key>app_file</key>
+				<string>%input_path%</string>
+				<key>name</key>
+				<string>%NAME%</string>
+			</dict>
+			<key>Processor</key>
+			<string>com.github.almenscorner.intune-upload.processors/IntuneAppIconGetter</string>	
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>app_file</key>
+                <string>%dmg_path%</string>
+                <key>displayname</key>
+                <string>%display_name%</string>
+                <key>description</key>
+                <string>%description%</string>
+                <key>publisher</key>
+                <string>%developer%</string>
+                <key>version</key>
+                <string>%version%</string>
+                <key>bundleVersion</key>
+                <string>%version%</string>
+                <key>bundleId</key>
+                <string>%bundleid%</string>
+                <key>icon</key>
+                <string>%icon_file_path%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.almenscorner.intune-upload.processors/IntuneAppUploader</string>
 		</dict>
 	</array>
 </dict>

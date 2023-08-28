@@ -5,28 +5,28 @@
 	<key>Comment</key>
 	<string>Created with Recipe Robot v2.2.0 (https://github.com/homebysix/recipe-robot)</string>
 	<key>Description</key>
-	<string>Downloads the latest version of Postman and creates a package.</string>
+	<string>Installs the latest version of Python.</string>
 	<key>Identifier</key>
-	<string>com.github.ekristensen14.pkg.Postman</string>
+	<string>com.github.ekristensen14.install.Python</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
-		<string>Postman</string>
+		<string>Python</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
-	<string>com.github.ekristensen14.download.Postman</string>
+	<string>com.github.ekristensen14.download.Python</string>
 	<key>Process</key>
 	<array>
 		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>app_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/Postman.app</string>
+				<key>pkg_path</key>
+				<string>%pathname%</string>
 			</dict>
 			<key>Processor</key>
-			<string>AppPkgCreator</string>
+			<string>Installer</string>
 		</dict>
 	</array>
 </dict>
