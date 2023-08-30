@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Code.</string>
 	<key>Identifier</key>
-	<string>com.github.almenscorner.download.Code</string>
+	<string>com.github.ekristensen14.download.Code</string>
 	<key>Input</key>
 	<dict>
 		<key>APP_FILENAME</key>
