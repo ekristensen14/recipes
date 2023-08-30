@@ -9,7 +9,7 @@
     <key>Input</key>
     <dict>
         <key>NAME</key>
-        <string>Docker - %PLATFORM_ARCH%</string>
+        <string>Docker</string>
         <key>description</key>
         <string>Docker Desktop &#8211; the fastest way to containerize applications.</string>
         <key>developer</key>
