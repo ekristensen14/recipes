@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Postman and imports it into Intune.</string>
 	<key>Identifier</key>
-	<string>com.github.ekristensen14.intune.Postman</string>
+	<string>com.github.ekristensen14.intune.Postman-arm64</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
