@@ -50,6 +50,15 @@
 		<dict>
 			<key>Arguments</key>
 			<dict>
+				<key>app_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%/Postman.app</string>
+			</dict>
+			<key>Processor</key>
+			<string>AppPkgCreator</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
 				<key>app_file</key>
 				<string>%input_path%</string>
 				<key>name</key>
@@ -62,7 +71,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>app_file</key>
-                <string>%dmg_path%</string>
+                <string>%pkg_path%</string>
                 <key>displayname</key>
                 <string>%display_name%</string>
                 <key>description</key>
