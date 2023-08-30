@@ -9,13 +9,13 @@
     <key>Input</key>
     <dict>
         <key>NAME</key>
-        <string>Docker</string>
+        <string>Docker - %PLATFORM_ARCH%</string>
         <key>description</key>
         <string>Docker Desktop &#8211; the fastest way to containerize applications.</string>
         <key>developer</key>
         <string>Docker</string>
-        <key>display_name</key>
-        <string>Docker Desktop</string>
+        <key>display_namee</key>
+        <string>Docker Desktop - %PLATFORM_ARCH%</string>
         <key>PLATFORM_ARCH</key>
         <string>amd64</string>
         <key>categories</key>
@@ -75,7 +75,7 @@
                 <key>app_file</key>
                 <string>%pkg_path%</string>
                 <key>displayname</key>
-                <string>%display_name%</string>
+                <string>%display_namee%</string>
                 <key>description</key>
                 <string>%description%</string>
                 <key>publisher</key>
@@ -92,6 +92,19 @@
             <key>Processor</key>
             <string>com.github.almenscorner.intune-upload.processors/IntuneAppUploader</string>
         </dict>
+        <dict>
+			<key>Arguments</key>
+			<dict>
+				<key>display_name</key>
+				<string>%display_namee%</string>
+				<key>keep_version_count</key>
+				<integer>1</integer>
+				<key>test_mode</key>
+				<true/>
+			</dict>
+			<key>Processor</key>
+			<string>com.github.almenscorner.intune-upload.processors/IntuneAppCleaner</string>
+		</dict>
     </array>
 </dict>
 </plist>
