@@ -16,6 +16,8 @@
 		<string>Postdot Technologies, Inc</string>
 		<key>display_name</key>
 		<string>Postman</string>
+		<key>PLATFORM_ARCH</key>
+		<string>64</string>
 		<key>categories</key>
 		<array>
 			<string>Development &amp; Design</string>
