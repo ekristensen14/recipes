@@ -117,8 +117,6 @@
 				<string>%display_namee%</string>
 				<key>keep_version_count</key>
 				<integer>1</integer>
-				<key>test_mode</key>
-				<true/>
 			</dict>
 			<key>Processor</key>
 			<string>com.github.almenscorner.intune-upload.processors/IntuneAppCleaner</string>
