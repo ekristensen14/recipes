@@ -87,7 +87,7 @@
                     <key>CFBundleShortVersionString</key>
                     <string>version</string>
                     <key>CFBundleIdentifier</key>
-                    <string>bundleId</string>
+                    <string>bundleIdd</string>
                 </dict>
             </dict>
         </dict>
@@ -118,7 +118,7 @@
                 <key>bundleVersion</key>
                 <string>%version%</string>
                 <key>bundleId</key>
-                <string>%bundleid%</string>
+                <string>%bundleIdd%</string>
                 <key>icon</key>
                 <string>%icon_file_path%</string>
             </dict>
