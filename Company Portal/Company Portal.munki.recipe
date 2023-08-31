@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Comment</key>
+	<string>Created with Recipe Robot v2.2.0 (https://github.com/homebysix/recipe-robot)</string>
+	<key>Description</key>
+	<string>Downloads the latest version of Company Portal and imports it into Munki.</string>
+	<key>Identifier</key>
+	<string>com.github.ekristensen14.munki.CompanyPortal</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Company Portal</string>
+		<key>description</key>
+		<string> </string>
+		<key>developer</key>
+		<string>Microsoft Corporation</string>
+		<key>display_namee</key>
+		<string>Company Portal</string>
+		</dict>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>ParentRecipe</key>
+	<string>com.github.ekristensen14.download.CompanyPortal</string>
+	<key>Process</key>
+	<array>
+		<dict>
+            <key>Arguments</key>
+            <dict>
+                <key>app_file</key>
+                <string>%RECIPE_CACHE_DIR%/Zoom/Applications/%NAME%.app</string>
+                <key>name</key>
+                <string>%NAME%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.almenscorner.intune-upload.processors/IntuneAppIconGetter</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>app_file</key>
+                <string>%flat_pkg_path%</string>
+                <key>displayname</key>
+                <string>%display_namee%</string>
+                <key>description</key>
+                <string>%description%</string>
+                <key>publisher</key>
+                <string>%developer%</string>
+                <key>version</key>
+                <string>%jamfversion%</string>
+                <key>bundleVersion</key>
+                <string>%jamfversion%</string>
+                <key>bundleId</key>
+                <string>%BUNDLE_ID%</string>
+                <key>icon</key>
+                <string>%icon_file_path%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.almenscorner.intune-upload.processors/IntuneAppUploader</string>
+        </dict>
+        <dict>
+			<key>Arguments</key>
+			<dict>
+				<key>display_name</key>
+				<string>%display_namee%</string>
+				<key>keep_version_count</key>
+				<integer>1</integer>
+			</dict>
+			<key>Processor</key>
+			<string>com.github.almenscorner.intune-upload.processors/IntuneAppCleaner</string>
+		</dict>
+
+	</array>
+</dict>
+</plist>
