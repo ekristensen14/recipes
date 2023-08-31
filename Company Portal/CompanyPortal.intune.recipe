@@ -95,9 +95,9 @@
                 <key>publisher</key>
                 <string>%developer%</string>
                 <key>version</key>
-                <string>%jamfversion%</string>
+                <string>%version%</string>
                 <key>bundleVersion</key>
-                <string>%jamfversion%</string>
+                <string>%version%</string>
                 <key>bundleId</key>
                 <string>%BUNDLE_ID%</string>
                 <key>icon</key>
