@@ -15,7 +15,7 @@
         <key>developer</key>
         <string>Docker</string>
         <key>display_namee</key>
-        <string>Docker Desktop - %PLATFORM_ARCH%</string>
+        <string>Docker Desktop - x64</string>
         <key>PLATFORM_ARCH</key>
         <string>amd64</string>
         <key>categories</key>
