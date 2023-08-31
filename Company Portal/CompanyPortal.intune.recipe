@@ -71,12 +71,11 @@
                 </dict>
             </dict>
         </dict>
-
 		<dict>
             <key>Arguments</key>
             <dict>
                 <key>app_file</key>
-                <string>%RECIPE_CACHE_DIR%/Applications/%NAME%/%NAME%.app</string>
+                <string>%RECIPE_CACHE_DIR%/Applications/%NAME%.app</string>
                 <key>name</key>
                 <string>%NAME%</string>
             </dict>
