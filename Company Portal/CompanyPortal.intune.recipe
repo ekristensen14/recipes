@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Company Portal and imports it into Munki.</string>
 	<key>Identifier</key>
-	<string>com.github.ekristensen14.munki.CompanyPortal</string>
+	<string>com.github.ekristensen14.intune.CompanyPortal</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
