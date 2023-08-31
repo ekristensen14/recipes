@@ -17,7 +17,7 @@
         <key>developer</key>
         <string>OpenVPN</string>
         <key>display_namee</key>
-        <string>OpenVPN Connect</string>
+        <string>OpenVPN Connect - x86_64</string>
 		<key>categories</key>
 		<array>
 			<string>Other apps</string>
