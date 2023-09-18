@@ -2,30 +2,27 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Identifier</key>
-	<string>com.github.ekristensen14.intune.zoom</string>
-	<key>Input</key>
-	<dict>
-		<key>Description</key>
-		<string>Downloads the current release version of Zoom and builds a package and imports it into Intune.</string>
-		<key>Identifier</key>
-		<string>com.github.ekristensen14.intune.zoom</string>
-		<key>Input</key>
-		<dict>
-			<key>NAME</key>
-			<string>Zoom</string>
-			<key>description</key>
-			<string>The Zoom app provides cloud-hosted video conferencing, plus online meetings and group messaging.</string>
-			<key>developer</key>
-			<string>Zoom Video Communications, Inc.</string>
-			<key>display_name</key>
-			<string>Zoom</string>
-			<key>categories</key>
-			<array>
-				<string>Productivity</string>
-			</array>	
-		</dict>	
-	</dict>
+    <key>Description</key>
+    <string>Downloads the current release version of Zoom and builds a package and imports it into Intune.</string>
+    <key>Identifier</key>
+    <string>com.github.ekristensen14.intune.Zoom</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Zoom</string>
+        <key>BUNDLE_ID</key>
+		<string>us.zoom.xos</string>
+        <key>description</key>
+        <string>The Zoom app provides cloud-hosted video conferencing, plus online meetings and group messaging.</string>
+        <key>developer</key>
+        <string>Zoom Video Communications, Inc.</string>
+        <key>display_namee</key>
+        <string>Zoom</string>
+        <key>categories</key>
+        <array>
+            <string>Productivity</string>
+        </array>
+    </dict>
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
