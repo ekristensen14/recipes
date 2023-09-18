@@ -15,12 +15,12 @@
 		<key>Input</key>
 		<dict>
 			<key>NAME</key>
-			<string>Zoom</string>
+			<string>Zoom.us</string>
 			<key>description</key>
 			<string>The Zoom app provides cloud-hosted video conferencing, plus online meetings and group messaging.</string>
 			<key>developer</key>
 			<string>Zoom Video Communications, Inc.</string>
-			<key>display_namee</key>
+			<key>display_name</key>
 			<string>Zoom</string>
 			<key>categories</key>
 			<array>
@@ -105,7 +105,7 @@
                 <key>app_file</key>
                 <string>%pathname%</string>
                 <key>displayname</key>
-                <string>%display_namee%</string>
+                <string>%display_name%</string>
                 <key>description</key>
                 <string>%description%</string>
                 <key>publisher</key>
@@ -126,7 +126,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>display_name</key>
-				<string>%display_namee%</string>
+				<string>%display_name%</string>
 				<key>keep_version_count</key>
 				<integer>1</integer>
 			</dict>
