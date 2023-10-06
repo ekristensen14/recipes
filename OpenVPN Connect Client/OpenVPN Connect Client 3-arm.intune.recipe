@@ -106,7 +106,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>app_file</key>
-                <string>%flat_pkg_path%</string>
+                <string>%destination_path%</string>
                 <key>displayname</key>
                 <string>%display_namee%</string>
                 <key>description</key>
@@ -123,7 +123,7 @@
                 <string>%icon_file_path%</string>
             </dict>
             <key>Processor</key>
-            <string>com.github.almenscorner.intune-upload.processors/IntuneAppUploader</string>
+            <string>com.github.ekristensen14.intune-upload.processors/IntuneAppUploader</string>
 		</dict>
 		<dict>
 			<key>Arguments</key>
