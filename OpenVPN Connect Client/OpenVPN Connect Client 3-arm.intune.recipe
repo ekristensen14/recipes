@@ -106,7 +106,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>app_file</key>
-                <string>%destination_path%</string>
+                <string>%flat_pkg_path%</string>
                 <key>displayname</key>
                 <string>%display_namee%</string>
                 <key>description</key>
