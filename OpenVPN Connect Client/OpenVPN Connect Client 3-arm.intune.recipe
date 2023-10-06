@@ -106,7 +106,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>app_file</key>
-                <string>%source_path%</string>
+                <string>%destination_path%</string>
                 <key>displayname</key>
                 <string>%display_namee%</string>
                 <key>description</key>
