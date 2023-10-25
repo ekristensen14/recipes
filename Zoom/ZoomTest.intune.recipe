@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the current release version of Zoom and builds a package and imports it into Intune.</string>
+    <key>Identifier</key>
+    <string>com.github.ekristensen14.intune.Zoom</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Zoom - Test</string>
+        <key>description</key>
+        <string>The Zoom app provides cloud-hosted video conferencing, plus online meetings and group messaging.</string>
+        <key>developer</key>
+        <string>Zoom Video Communications, Inc.</string>
+        <key>display_namee</key>
+        <string>Zoom - Test</string>
+        <key>categories</key>
+        <array>
+            <string>Productivity</string>
+        </array>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.4.0</string>
+    <key>ParentRecipe</key>
+    <string>com.github.homebysix.pkg.Zoom</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>app_file</key>
+                <string>%RECIPE_CACHE_DIR%/Zoom/Applications/zoom.us.app</string>
+                <key>name</key>
+                <string>%NAME%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.almenscorner.intune-upload.processors/IntuneAppIconGetter</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>app_file</key>
+                <string>%pathname%</string>
+                <key>displayname</key>
+                <string>%display_namee%</string>
+                <key>description</key>
+                <string>%description%</string>
+                <key>publisher</key>
+                <string>%developer%</string>
+                <key>version</key>
+                <string>%jamfversion%</string>
+                <key>bundleVersion</key>
+                <string>%jamfversion%</string>
+                <key>bundleId</key>
+                <string>%BUNDLE_ID%</string>
+                <key>icon</key>
+                <string>%icon_file_path%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.ekristensen14.intune-upload.processors/IntuneAppUploader</string>
+        </dict>
+        <dict>
+			<key>Arguments</key>
+			<dict>
+				<key>display_name</key>
+				<string>%display_namee%</string>
+				<key>keep_version_count</key>
+				<integer>1</integer>
+			</dict>
+			<key>Processor</key>
+			<string>com.github.almenscorner.intune-upload.processors/IntuneAppCleaner</string>
+		</dict>
+    </array>
+</dict>
+</plist>
