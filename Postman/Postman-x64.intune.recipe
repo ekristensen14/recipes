@@ -47,7 +47,7 @@
 				<string>%NAME%</string>
 			</dict>
 			<key>Processor</key>
-			<string>com.github.almenscorner.intune-upload.processors/IntuneAppIconGetter</string>	
+			<string>com.github.ekristensen14.intune-upload.processors/IntuneAppIconGetter</string>	
 		</dict>
 		<dict>
 			<key>Arguments</key>

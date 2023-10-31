@@ -123,7 +123,7 @@
                 <string>%icon_file_path%</string>
             </dict>
             <key>Processor</key>
-            <string>com.github.almenscorner.intune-upload.processors/IntuneAppUploader</string>
+            <string>com.github.ekristensen14.intune-upload.processors/IntuneAppUploader</string>
 		</dict>
 		<dict>
 			<key>Arguments</key>
