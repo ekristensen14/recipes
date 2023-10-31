@@ -581,7 +581,18 @@ class IntuneUploaderBase(Processor):
 
         if missing_assignment:
             for assignment in missing_assignment:
-                    if assignment["group_mode"] == "Excluded":
+                    if assignment["All_Users"] == True:
+                        data["mobileAppAssignments"].append(
+                            {
+                                "intent": assignment["intent"],
+                                "settings": None,
+                                "target": {
+                                    "@odata.type": "#microsoft.graph.allLicensedUsersAssignmentTarget"
+                                }
+                            }
+                        )
+                    elif assignment["All_Users"] != True & assignment["group_mode"] == "Excluded":
+                        # Exclude the app from the group
                         data["mobileAppAssignments"].append(
                         {
                             "intent": assignment["intent"],
@@ -607,14 +618,39 @@ class IntuneUploaderBase(Processor):
 
             for assignment in current_assignment["value"]:
                 if assignment:
-                    data["mobileAppAssignments"].append(
-                        {
-                            "@odata.type": assignment["@odata.type"],
-                            "target": assignment["target"],
-                            "intent": assignment["intent"],
-                            "settings": None,
-                        }
-                    )
+                    if(assignment["target"].get("@odata.type") == "#microsoft.graph.groupAssignmentTarget"):
+                        # Assign the app to all users
+                        data["mobileAppAssignments"].append(
+                            {
+                                "intent": assignment["intent"],
+                                "settings": None,
+                                "target": {
+                                    "@odata.type": assignment["@odata.type"],
+                                    "target": assignment["target"],
+                                }
+                            }
+                        )
+                    elif(assignment["target"].get("@odata.type") == "#microsoft.graph.exclusionGroupAssignmentTarget"):
+                        data["mobileAppAssignments"].append(
+                            {
+                                "intent": assignment["intent"],
+                                "settings": None,
+                                "target": {
+                                    "@odata.type": "#microsoft.graph.exclusionGroupAssignmentTarget",
+                                    "groupId": assignment["group_id"]
+                                }
+                            }
+                        )
+                    elif(assignment["target"].get("@odata.type") == "#microsoft.graph.allLicensedUsersAssignmentTarget"):
+                        data["mobileAppAssignments"].append(
+                            {
+                                "intent": assignment["intent"],
+                                "settings": None,
+                                "target": {
+                                    "@odata.type": "#microsoft.graph.allLicensedUsersAssignmentTarget"
+                                }
+                            }
+                        )
 
 
             self.output(
