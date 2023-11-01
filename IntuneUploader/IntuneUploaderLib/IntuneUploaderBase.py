@@ -625,8 +625,8 @@ class IntuneUploaderBase(Processor):
                                 "intent": assignment["intent"],
                                 "settings": None,
                                 "target": {
-                                    "@odata.type": assignment["@odata.type"],
-                                    "target": assignment["target"],
+                                    "@odata.type": assignment["target"].get("@odata.type"),
+                                    "groupId": assignment["target"].get("groupId")
                                 }
                             }
                         )
@@ -647,7 +647,7 @@ class IntuneUploaderBase(Processor):
                                 "intent": assignment["intent"],
                                 "settings": None,
                                 "target": {
-                                    "@odata.type": "#microsoft.graph.allLicensedUsersAssignmentTarget"
+                                    "@odata.type": assignment["target"].get("@odata.type")
                                 }
                             }
                         )
