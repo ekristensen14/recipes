@@ -312,7 +312,7 @@ class IntuneAppUploader(IntuneUploaderBase):
                 # If the app version is the same, skip
                 if current_app_data["primaryBundleVersion"] == app_bundleVersion:
                     self.output(
-                        f'Skip: App {current_app_data["displayName"]} version {current_app_data["primaryBundleVersion"]} is up to date'
+                        f'App {current_app_data["displayName"]} version {current_app_data["primaryBundleVersion"]} is up to date'
                     )
                     return
                 # If the app version is different, update the app
@@ -449,6 +449,26 @@ class IntuneAppUploader(IntuneUploaderBase):
 
         if app_assignment_info:
             self.assign_app(app_data, app_assignment_info)
+        # If the app was updated, update the app again to set the app data    
+        if current_app_result == "update":
+            app_data = App()
+            if app_icon:
+                app_data.largeIcon = {
+                    "type": "image/png",
+                    "value": self.encode_icon(app_icon),
+                }
+
+            # Get the app data as a dictionary
+            app_data_dict = app_data.__dict__
+            # Convert the dictionary to JSON
+            data = json.dumps(app_data_dict)
+            self.makeapirequestPatch(
+            f'{self.BASE_ENDPOINT}/{current_app_data["id"]}',
+            self.token,
+            "",
+            data,
+            204,
+            )
 
         self.env["intune_app_changed"] = True
         self.env["intuneappuploader_summary_result"] = {

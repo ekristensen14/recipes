@@ -567,16 +567,23 @@ class IntuneUploaderBase(Processor):
         current_assignment = self.makeapirequest(
             f"{self.BASE_ENDPOINT}/{self.request['id']}/assignments", self.token
         )
-        # Get the current group ids
+        # Get the current group ids and types
         current_group_ids = [
-            c["target"].get("groupId")
+            {"id": c["target"].get("groupId"), "type": c["target"].get("@odata.type")}
             for c in current_assignment["value"]
             if c["target"].get("groupId")
         ]
         # Check if the group id is not in the current assignments
         missing_assignment = [
-            a for a in assignment_info if a["group_id"] not in current_group_ids
+            a for a in assignment_info if a["group_id"] not in [c["id"] for c in current_group_ids]
         ]
+        # Check if allLicensedUsersAssignmentTarget is assigned
+        all_licensed_users_assigned = False
+        for c in current_group_ids:
+            if c["type"] == "#microsoft.graph.allLicensedUsersAssignmentTarget":
+                all_licensed_users_assigned = True
+                break
+            
         data = {"mobileAppAssignments": []}
 
         if missing_assignment:
@@ -636,8 +643,8 @@ class IntuneUploaderBase(Processor):
                                 "intent": assignment["intent"],
                                 "settings": None,
                                 "target": {
-                                    "@odata.type": "#microsoft.graph.exclusionGroupAssignmentTarget",
-                                    "groupId": assignment["group_id"]
+                                    "@odata.type": assignment["target"].get("@odata.type"),
+                                    "groupId": assignment["target"].get("groupId")
                                 }
                             }
                         )
