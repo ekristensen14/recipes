@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of Code and imports it into Intune.</string>
     <key>Identifier</key>
-    <string>com.github.ekristensen14.intune.Code</string>
+    <string>com.github.ekristensen14.intune.Code1</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -20,6 +20,8 @@
         <array>
             <string>Development &amp; Design</string>
         </array>
+        <key>SIGNINGCERTIFICATE</key>
+        <string>Developer ID Installer&#58; Enrique Mejia Jimenez &#40;7W8G5GDX22&#41;</string>
     </dict>
     <key>MinimumVersion</key>
     <string>0.4.0</string>
@@ -36,6 +38,17 @@
 			<key>Processor</key>
 			<string>AppPkgCreator</string>
 		</dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_path</key>
+                <string>%pkg_path%</string>
+                <key>signing_cert</key>
+                <string>%SIGNINGCERTIFICATE%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.rtrouton.SharedProcessors/PkgSigner</string>
+        </dict>
         <dict>
             <key>Arguments</key>
             <dict>
