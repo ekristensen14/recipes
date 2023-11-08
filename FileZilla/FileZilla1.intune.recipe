@@ -20,6 +20,8 @@
 		<string>Tim Kosse</string>
 		<key>display_name</key>
 		<string>FileZilla</string>
+		<key>SIGNINGCERTIFICATE</key>
+        <string>Insert Developer ID</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.4.0</string>
@@ -67,6 +69,17 @@
 			<key>Processor</key>
 			<string>AppPkgCreator</string>
 		</dict>
+		<dict>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_path</key>
+                <string>%pkg_path%</string>
+                <key>signing_cert</key>
+                <string>%SIGNINGCERTIFICATE%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.rtrouton.SharedProcessors/PkgSigner</string>
+        </dict>
 		<dict>
 			<key>Arguments</key>
 			<dict>

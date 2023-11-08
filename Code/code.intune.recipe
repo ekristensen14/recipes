@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of Code and imports it into Intune.</string>
     <key>Identifier</key>
-    <string>com.github.ekristensen14.intune.Code1</string>
+    <string>com.github.ekristensen14.intune.code</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -21,7 +21,7 @@
             <string>Development &amp; Design</string>
         </array>
         <key>SIGNINGCERTIFICATE</key>
-        <string>Developer ID Installer&#58; Enrique Mejia Jimenez &#40;7W8G5GDX22&#41;</string>
+        <string>Insert Developer ID</string>
     </dict>
     <key>MinimumVersion</key>
     <string>0.4.0</string>
