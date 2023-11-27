@@ -57,6 +57,10 @@ class PkgSigner(Processor):
 
     	# rename unsigned package so that we can slot the signed package into place
         app_path = self.env[ "app_path" ]
+        app_dir = os.path.dirname( self.env[ "app_path" ] )
+        app_base_name = os.path.basename( self.env[ "app_path" ] )
+        ( app_name_no_extension, app_extension ) = os.path.splitext( app_base_name )
+
         pkg_dir = os.path.dirname( self.env[ "pkg_path" ] )
         pkg_base_name = os.path.basename( self.env[ "pkg_path" ] )
         ( pkg_name_no_extension, pkg_extension ) = os.path.splitext( pkg_base_name )
@@ -65,7 +69,6 @@ class PkgSigner(Processor):
         distributionFile = pkg_dir + "/distribution.xml"
         
         test_command = [
-            #"sudo", \
             "/usr/bin/pkgbuild", \
             "--component", \
             app_path, \
@@ -73,10 +76,23 @@ class PkgSigner(Processor):
             "/Applications", \
             "--sign", \
             self.env[ "signing_cert" ], \
-            self.env[ "pkg_path" ]
+            intermediate
         ]
         print(test_command)
         subprocess.call( test_command )
+
+        test_command2 = [
+            "/usr/bin/productbuild", \
+            "--package", \
+            intermediate, \
+            "--content", \
+            "/Applications/" + app_base_name, \
+            "--sign", \
+            self.env[ "signing_cert" ], \
+            self.env[ "pkg_path" ]
+        ]
+        print(test_command2)
+        subprocess.call( test_command2 )
 """"
         command_line_list = ["/usr/bin/pkgbuild", \
                              "--install-location", \
