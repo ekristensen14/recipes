@@ -55,10 +55,10 @@ class PkgSigner(Processor):
         pkg_dir = os.path.dirname( self.env[ "pkg_path" ] )
         pkg_base_name = os.path.basename( self.env[ "pkg_path" ] )
         ( pkg_name_no_extension, pkg_extension ) = os.path.splitext( pkg_base_name )
-
-        unsigned_pkg_path = os.path.join( pkg_dir, pkg_name_no_extension + "-unsigned2" + pkg_extension )
         out_pkg_path = os.path.join( pkg_dir, pkg_name_no_extension + "-unsigned" + pkg_extension )
-        os.rename( self.env[ "pkg_path" ], unsigned_pkg_path )
+        unsigned_pkg_path = os.path.join( pkg_dir, pkg_name_no_extension + "-unsigned2" + pkg_extension )
+        os.rename( self.env[ "pkg_path" ], out_pkg_path )
+
         command_line_list1 = [ "/usr/bin/productbuild", \
                               "--synthesize ", \
                                 "--package", \
