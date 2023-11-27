@@ -57,17 +57,18 @@ class PkgSigner(Processor):
         ( pkg_name_no_extension, pkg_extension ) = os.path.splitext( pkg_base_name )
         intermediate = os.path.join( pkg_dir, pkg_name_no_extension + "-intermediate" + pkg_extension )
         os.rename( self.env[ "pkg_path" ], intermediate )
-        distributionFile = pkg_dir + "/distribution.xml"
-        final_unsigned = os.path.join( pkg_dir, pkg_name_no_extension + "-final_unsigned" + pkg_extension )
+        distributionFile = pkg_dir + "distribution.xml"
+        
+        
         command_line_list1 = [ "/usr/bin/productbuild", \
                               "--synthesize ", \
                               "--package", \
                               intermediate, \
                               distributionFile ]
         print(command_line_list1)
-        # print command_line_list
         subprocess.call( command_line_list1 )
 
+        final_unsigned = os.path.join( pkg_dir, pkg_name_no_extension + "-final_unsigned" + pkg_extension )
         command_line_list2 = [ "/usr/bin/productbuild", \
                                 "--distribution", \
                                 distributionFile, \
@@ -75,7 +76,6 @@ class PkgSigner(Processor):
                                 intermediate, \
                                 final_unsigned ]
         print(command_line_list2)
-        # print command_line_list
         subprocess.call( command_line_list2 )
 
 
@@ -84,10 +84,7 @@ class PkgSigner(Processor):
                               self.env[ "signing_cert" ], \
                               final_unsigned, \
                               self.env[ "pkg_path" ] ]
-
         print(command_line_list3)
-
-        # print command_line_list
         subprocess.call( command_line_list3 )
 
 
