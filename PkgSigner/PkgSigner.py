@@ -55,25 +55,25 @@ class PkgSigner(Processor):
         pkg_dir = os.path.dirname( self.env[ "pkg_path" ] )
         pkg_base_name = os.path.basename( self.env[ "pkg_path" ] )
         ( pkg_name_no_extension, pkg_extension ) = os.path.splitext( pkg_base_name )
-        out_pkg_path = os.path.join( pkg_dir, pkg_name_no_extension + "-unsigned" + pkg_extension )
-        unsigned_pkg_path = os.path.join( pkg_dir, pkg_name_no_extension + "-unsigned2" + pkg_extension )
-        os.rename( self.env[ "pkg_path" ], out_pkg_path )
-
+        intermediate = os.path.join( pkg_dir, pkg_name_no_extension + "-intermediate" + pkg_extension )
+        os.rename( self.env[ "pkg_path" ], intermediate )
+        distributionFile = pkg_dir + "/distribution.xml"
+        final_unsigned = os.path.join( pkg_dir, pkg_name_no_extension + "-final_unsigned" + pkg_extension )
         command_line_list1 = [ "/usr/bin/productbuild", \
                               "--synthesize ", \
-                                "--package", \
-                              out_pkg_path, \
-                              pkg_dir + "/distribution.xml" ]
+                              "--package", \
+                              intermediate, \
+                              distributionFile ]
         print(command_line_list1)
         # print command_line_list
         subprocess.call( command_line_list1 )
 
         command_line_list2 = [ "/usr/bin/productbuild", \
                                 "--distribution", \
-                                pkg_dir + "/distribution.xml", \
+                                distributionFile, \
                                 "--package-path", \
-                                out_pkg_path, \
-                                pkg_dir + "/unsigned_final.pkg" ]
+                                intermediate, \
+                                final_unsigned ]
         print(command_line_list2)
         # print command_line_list
         subprocess.call( command_line_list2 )
@@ -82,7 +82,7 @@ class PkgSigner(Processor):
         command_line_list3 = [ "/usr/bin/productsign", \
                               "--sign", \
                               self.env[ "signing_cert" ], \
-                              pkg_dir + "/unsigned_final.pkg", \
+                              final_unsigned, \
                               self.env[ "pkg_path" ] ]
 
         print(command_line_list3)
