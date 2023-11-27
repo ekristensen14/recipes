@@ -65,8 +65,9 @@ class PkgSigner(Processor):
         distributionFile = pkg_dir + "/distribution.xml"
         
         command_line_list = ["/usr/bin/pkgbuild", \
-                             "--install-location /Applications", \
-                             "--component ", \
+                             "--install-location", \
+                             "/Applications", \
+                             "--component", \
                              app_path, \
                              intermediate
                              ]
