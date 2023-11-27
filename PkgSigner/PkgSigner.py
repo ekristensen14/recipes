@@ -57,11 +57,11 @@ class PkgSigner(Processor):
         ( pkg_name_no_extension, pkg_extension ) = os.path.splitext( pkg_base_name )
         intermediate = os.path.join( pkg_dir, pkg_name_no_extension + "-intermediate" + pkg_extension )
         os.rename( self.env[ "pkg_path" ], intermediate )
-        distributionFile = pkg_dir + "distribution.xml"
+        distributionFile = pkg_dir + "/distribution.xml"
         
         
         command_line_list1 = [ "/usr/bin/productbuild", \
-                              "--synthesize ", \
+                              "--synthesize", \
                               "--package", \
                               intermediate, \
                               distributionFile ]
