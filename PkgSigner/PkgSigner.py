@@ -64,6 +64,20 @@ class PkgSigner(Processor):
         os.remove( self.env[ "pkg_path" ] )
         distributionFile = pkg_dir + "/distribution.xml"
         
+        test_command = [
+            "sudo", \
+            "usr/bin/pkgbuild", \
+            "--component", \
+            app_path, \
+            "--install-location", \
+            "/Applications", \
+            "--sign", \
+            self.env[ "signing_cert" ], \
+            self.env[ "pkg_path" ]
+        ]
+        print(test_command)
+        subprocess.call( test_command )
+""""
         command_line_list = ["/usr/bin/pkgbuild", \
                              "--install-location", \
                              "/Applications", \
@@ -83,7 +97,8 @@ class PkgSigner(Processor):
         subprocess.call( command_line_list1 )
 
         final_unsigned = os.path.join( pkg_dir, pkg_name_no_extension + "-final_unsigned" + pkg_extension )
-        command_line_list2 = [ "/usr/bin/productbuild", \
+        command_line_list2 = [ "sudo", \
+                                "/usr/bin/productbuild", \
                                 "--distribution", \
                                 distributionFile, \
                                 "--package-path", \
@@ -100,7 +115,7 @@ class PkgSigner(Processor):
                               self.env[ "pkg_path" ] ]
         print(command_line_list3)
         subprocess.call( command_line_list3 )
-
+"""
 
 
 
