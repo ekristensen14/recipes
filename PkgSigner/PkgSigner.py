@@ -69,8 +69,7 @@ class PkgSigner(Processor):
                              "/Applications", \
                              "--component", \
                              app_path, \
-                             intermediate
-                             ]
+                             intermediate]
         print(command_line_list)
         subprocess.call( command_line_list )
 
@@ -92,7 +91,7 @@ class PkgSigner(Processor):
                                 final_unsigned ]
         print(command_line_list2)
         subprocess.call( command_line_list2 )
-        os.remove(intermediate)
+        ##os.remove(intermediate)
         ##os.remove(distributionFile)
         command_line_list3 = [ "/usr/bin/productsign", \
                               "--sign", \
