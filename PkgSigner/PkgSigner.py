@@ -65,8 +65,8 @@ class PkgSigner(Processor):
         distributionFile = pkg_dir + "/distribution.xml"
         
         test_command = [
-            "sudo", \
-            "usr/bin/pkgbuild", \
+            #"sudo", \
+            "/usr/bin/pkgbuild", \
             "--component", \
             app_path, \
             "--install-location", \
