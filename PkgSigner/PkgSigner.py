@@ -85,8 +85,6 @@ class PkgSigner(Processor):
             "/usr/bin/productbuild", \
             "--package", \
             intermediate, \
-            "--content", \
-            "/Applications/" + app_base_name, \
             "--sign", \
             self.env[ "signing_cert" ], \
             self.env[ "pkg_path" ]
