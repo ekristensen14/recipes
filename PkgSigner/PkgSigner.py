@@ -69,24 +69,20 @@ class PkgSigner(Processor):
         distributionFile = pkg_dir + "/distribution.xml"
         
         test_command = [
-            "/usr/bin/pkgbuild", \
+            "/usr/bin/productbuild", \
             "--component", \
             app_path, \
-            "--install-location", \
             "/Applications", \
-            "--sign", \
-            self.env[ "signing_cert" ], \
             intermediate
         ]
         print(test_command)
         subprocess.call( test_command )
 
         test_command2 = [
-            "/usr/bin/productbuild", \
-            "--package", \
-            intermediate, \
+            "/usr/bin/productsign", \
             "--sign", \
             self.env[ "signing_cert" ], \
+            intermediate, \
             self.env[ "pkg_path" ]
         ]
         print(test_command2)
