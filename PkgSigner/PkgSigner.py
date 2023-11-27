@@ -70,10 +70,10 @@ class PkgSigner(Processor):
 
         command_line_list2 = [ "/usr/bin/productbuild", \
                                 "--distribution", \
-                                self.env[ "pkg_dir" ]+ "/distribution.xml", \
-                                "--package", \
+                                pkg_dir + "/distribution.xml", \
+                                "--package-path", \
                                 out_pkg_path, \
-                                unsigned_pkg_path ]
+                                pkg_dir + "/unsigned_final.pkg" ]
         print(command_line_list2)
         # print command_line_list
         subprocess.call( command_line_list2 )
@@ -82,7 +82,7 @@ class PkgSigner(Processor):
         command_line_list3 = [ "/usr/bin/productsign", \
                               "--sign", \
                               self.env[ "signing_cert" ], \
-                              unsigned_pkg_path, \
+                              pkg_dir + "/unsigned_final.pkg", \
                               self.env[ "pkg_path" ] ]
 
         print(command_line_list3)
