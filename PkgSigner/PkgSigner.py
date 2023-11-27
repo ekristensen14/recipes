@@ -63,7 +63,7 @@ class PkgSigner(Processor):
                               "--synthesize ", \
                                 "--package", \
                               out_pkg_path, \
-                              self.env[ "pkg_dir" ]+ "/distribution.xml" ]
+                              pkg_dir + "/distribution.xml" ]
         print(command_line_list1)
         # print command_line_list
         subprocess.call( command_line_list1 )
