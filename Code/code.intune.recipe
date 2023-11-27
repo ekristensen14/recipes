@@ -47,7 +47,7 @@
                 <string>%SIGNINGCERTIFICATE%</string>
             </dict>
             <key>Processor</key>
-            <string>com.github.ekristensen14/PkgSigner</string>
+            <string>com.github.ekristensen14.PkgSigner/PkgSigner</string>
         </dict>
         <dict>
             <key>Arguments</key>
