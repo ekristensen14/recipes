@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Comment</key>
+	<string>Created with Recipe Robot v2.2.0 (https://github.com/homebysix/recipe-robot)</string>
+	<key>Description</key>
+	<string>Downloads the latest version of Company Portal and imports it into Munki.</string>
+	<key>Identifier</key>
+	<string>com.github.ekristensen14.intune.CompanyPortal</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Company Portal</string>
+		<key>description</key>
+		<string> </string>
+		<key>developer</key>
+		<string>Microsoft Corporation</string>
+		<key>display_namee</key>
+		<string>Company Portal</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>ParentRecipe</key>
+	<string>com.github.ekristensen14.download.CompanyPortal</string>
+	<key>Process</key>
+	<array>
+		<dict>
+            <key>Processor</key>
+            <string>FlatPkgUnpacker</string>
+            <key>Comment</key>
+            <string>First expand flat package</string>
+            <key>Arguments</key>
+            <dict>
+                <key>flat_pkg_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/pkg_unpack</string>
+                <key>purge_destination</key>
+                <false/>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>PkgPayloadUnpacker</string>
+            <key>Comment</key>
+            <string>Unpack pkg based on pkg payload information</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_payload_path</key>
+                <string>%RECIPE_CACHE_DIR%/pkg_unpack/CompanyPortal-Component.pkg/Payload</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%</string>
+                <key>purge_destination</key>
+                <false/>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>PlistReader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>info_path</key>
+                <string>%RECIPE_CACHE_DIR%/Applications/%NAME%.app/Contents/Info.plist</string>
+                <key>plist_keys</key>
+                <dict>
+                    <key>CFBundleShortVersionString</key>
+                    <string>version</string>
+                    <key>CFBundleIdentifier</key>
+                    <string>BUNDLE_ID</string>
+                </dict>
+            </dict>
+        </dict>
+		<dict>
+            <key>Arguments</key>
+            <dict>
+                <key>app_file</key>
+                <string>%RECIPE_CACHE_DIR%/Applications/%NAME%.app</string>
+                <key>name</key>
+                <string>%NAME%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.almenscorner.intune-upload.processors/IntuneAppIconGetter</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>app_file</key>
+                <string>%flat_pkg_path%</string>
+                <key>displayname</key>
+                <string>%display_namee%</string>
+                <key>description</key>
+                <string>%description%</string>
+                <key>publisher</key>
+                <string>%developer%</string>
+                <key>version</key>
+                <string>%version%</string>
+                <key>bundleVersion</key>
+                <string>%version%</string>
+                <key>bundleId</key>
+                <string>%BUNDLE_ID%</string>
+                <key>icon</key>
+                <string>%icon_file_path%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.ekristensen14.intune-upload.processors/IntuneAppUploader</string>
+        </dict>
+	</array>
+</dict>
+</plist>
