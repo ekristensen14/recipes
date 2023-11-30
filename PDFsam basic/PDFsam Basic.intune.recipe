@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Identifier</key>
+    <string>com.github.ekristensen14.intune.PDFsamBasic</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>PDFsam</string>
+        <key>description</key>
+        <string>PDFsam Basic is a free and open-source cross-platform desktop application to split, merge, extract pages, rotate and mix PDF documents.</string>
+        <key>developer</key>
+        <string>Andrea Vacondio</string>
+        <key>display_namee</key>
+        <string>PDFsam Basic</string>
+        <key>categories</key>
+        <array>
+            <string>Productivity</string>
+        </array>
+        <key>BUNDLE_ID</key>
+        <string>org.pdfsam.basic</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.4.0</string>
+    <key>ParentRecipe</key>
+    <string>com.github.ekristensen14.pkg.PDFsamBasic</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>app_file</key>
+                <string>%pathname%/PDFsam Basic.app</string>
+                <key>name</key>
+                <string>%NAME%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.almenscorner.intune-upload.processors/IntuneAppIconGetter</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>app_file</key>
+                <string>%pkg_path%</string>
+                <key>displayname</key>
+                <string>%display_namee%</string>
+                <key>description</key>
+                <string>%description%</string>
+                <key>publisher</key>
+                <string>%developer%</string>
+                <key>version</key>
+                <string>%version%</string>
+                <key>bundleVersion</key>
+                <string>%version%</string>
+                <key>bundleId</key>
+                <string>%BUNDLE_ID%</string>
+                <key>icon</key>
+                <string>%icon_file_path%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.ekristensen14.intune-upload.processors/IntuneAppUploader</string>
+        </dict>
+    </array>
+</dict>
+</plist>
