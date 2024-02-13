@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Stub recipe reference to use the PkgSigner in this repo.</string>
 	<key>Identifier</key>
-	<string>com.github.ekristensen14.PkgSigner</string>
+	<string>com.github.ekristensen14.SharedProcessors</string>
 	<key>Input</key>
 	<dict/>
 	<key>MinimumVersion</key>
