@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of Code and imports it into Intune.</string>
     <key>Identifier</key>
-    <string>com.github.ekristensen14.intune.Code</string>
+    <string>com.github.ekristensen14.intune.code</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -21,7 +21,7 @@
             <string>Development &amp; Design</string>
         </array>
         <key>SIGNINGCERTIFICATE</key>
-        <string></string>
+        <string>Insert Developer ID</string>
     </dict>
     <key>MinimumVersion</key>
     <string>0.4.0</string>
@@ -42,12 +42,23 @@
             <key>Arguments</key>
             <dict>
                 <key>pkg_path</key>
+                <string>%%pkg_path%</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.ekristensen14.SharedProcessors/DistributionPackageCreator</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_path</key>
                 <string>%pkg_path%</string>
+                <key>app_path</key>
+                <string>%input_path%</string>
                 <key>signing_cert</key>
                 <string>%SIGNINGCERTIFICATE%</string>
             </dict>
             <key>Processor</key>
-            <string>PkgSigner</string>
+            <string>com.github.ekristensen14.SharedProcessors/PkgSigner</string>
         </dict>
         <dict>
             <key>Arguments</key>
@@ -81,19 +92,8 @@
                 <string>%icon_file_path%</string>
             </dict>
             <key>Processor</key>
-            <string>com.github.almenscorner.intune-upload.processors/IntuneAppUploader</string>
+            <string>com.github.ekristensen14.intune-upload.processors/IntuneAppUploader</string>
         </dict>
-        <dict>
-			<key>Arguments</key>
-			<dict>
-				<key>display_name</key>
-				<string>%display_namee%</string>
-				<key>keep_version_count</key>
-				<integer>1</integer>
-			</dict>
-			<key>Processor</key>
-			<string>com.github.almenscorner.intune-upload.processors/IntuneAppCleaner</string>
-		</dict>
     </array>
 </dict>
 </plist>
