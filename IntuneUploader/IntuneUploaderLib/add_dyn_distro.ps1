@@ -1,4 +1,5 @@
 $csv = Import-Csv "/Users/erebacz/distro_csv.csv" -Delimiter ";"
+$csv = $csv[0]
 
 foreach($row in $csv){
     # Check if distro exists

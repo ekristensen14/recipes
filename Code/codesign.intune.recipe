@@ -43,15 +43,6 @@
             <dict>
                 <key>pkg_path</key>
                 <string>%pkg_path%</string>
-            </dict>
-            <key>Processor</key>
-            <string>com.github.ekristensen14.SharedProcessors/DistributionPackageCreator</string>
-        </dict>
-        <dict>
-            <key>Arguments</key>
-            <dict>
-                <key>pkg_path</key>
-                <string>%pkg_path%</string>
                 <key>app_path</key>
                 <string>%input_path%</string>
                 <key>signing_cert</key>
