@@ -42,7 +42,7 @@
             <key>Arguments</key>
             <dict>
                 <key>app_file</key>
-                <string>%pathname%</string>
+                <string>%RECIPE_CACHE_DIR%/downloads/%NAME%.pkg</string>
                 <key>displayname</key>
                 <string>%display_namee%</string>
                 <key>description</key>
