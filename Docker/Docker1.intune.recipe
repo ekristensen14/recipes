@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Docker desktop</string>
     <key>Identifier</key>
-    <string>com.github.ekristensen14.intune.Docker</string>
+    <string>com.github.ekristensen14.intune.Docker1</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
