@@ -17,7 +17,7 @@
         <key>display_namee</key>
         <string>Docker Desktop - %PLATFORM_ARCH%</string>
         <key>PLATFORM_ARCH</key>
-        <string>Insert ARCH (arm64 / amd64)</string>
+        <string>arm64 / amd64</string>
         <key>categories</key>
         <array>
             <string>Development &amp; Design</string>
