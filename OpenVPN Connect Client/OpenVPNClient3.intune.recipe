@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Identifier</key>
-    <string>com.github.ekristensen14.intune.OpenVPN Connect Client 3</string>
+    <string>com.github.ekristensen14.intune.OpenVPNClient3</string>
     <key>Input</key>
     <dict>
         <key>ARCH</key>
