@@ -10,7 +10,7 @@
     <dict>
         <key>PLATFORM_ARCH</key>
         <string>arm64 / amd64</string>
-        <key>NAME-%PLATFORM_ARCH%</key>
+        <key>NAME</key>
         <string>Docker</string>
         <key>description</key>
         <string>Docker Desktop &#8211; the fastest way to containerize applications.</string>

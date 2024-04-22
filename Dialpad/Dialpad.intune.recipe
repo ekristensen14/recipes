@@ -11,7 +11,7 @@
         <key>PLATFORM_ARCH</key>
         <string>arm64 / x64</string>
 		<key>NAME</key>
-		<string>Dialpad-%PLATFORM_ARCH%</string>
+		<string>Dialpad</string>
 		<key>description</key>
 		<string>Dialpad is a business communication tool that provides voice calling, messaging, and meetings in a single app </string>
 		<key>developer</key>
@@ -44,7 +44,7 @@
             <key>Arguments</key>
             <dict>
                 <key>app_file</key>
-                <string>%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg</string>
+                <string>%RECIPE_CACHE_DIR%/downloads/%NAME%-%PLATFORM_ARCH%.dmg</string>
                 <key>displayname</key>
                 <string>%display_namee%</string>
                 <key>description</key>
