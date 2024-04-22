@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Identifier</key>
-    <string>com.github.ekristensen14.intune.OpenVPN Connect Client 3-x64</string>
+    <string>com.github.ekristensen14.intune.OpenVPN Connect Client 3</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -11,13 +11,13 @@
         <key>DERIVE_MIN_OS</key>
         <string>YES</string>
         <key>ARCH</key>
-        <string>x86_64</string>
+        <string>Insert ARCH (arm64/x86_64)</string>
         <key>description</key>
         <string>Official OpenVPN client for Mac for connecting to VPN servers using the OpenVPN protocol.</string>
         <key>developer</key>
         <string>OpenVPN</string>
         <key>display_namee</key>
-        <string>OpenVPN Connect - x86_64</string>
+        <string>OpenVPN Connect - %ARCH%</string>
 		<key>categories</key>
 		<array>
 			<string>Other apps</string>

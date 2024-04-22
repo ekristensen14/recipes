@@ -20,6 +20,8 @@
         <array>
             <string>Productivity</string>
         </array>
+        <key>PLATFORM_ARCH</key>
+        <string>Insert ARCH (arm64/x64)</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>

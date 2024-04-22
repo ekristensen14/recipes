@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Postman and imports it into Intune.</string>
 	<key>Identifier</key>
-	<string>com.github.ekristensen14.intune.Postman-arm64</string>
+	<string>com.github.ekristensen14.intune.Postman</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -17,7 +17,7 @@
 		<key>display_namee</key>
 		<string>Postman - %PLATFORM_ARCH%</string>
 		<key>PLATFORM_ARCH</key>
-		<string>arm64</string>
+		<string>Insert ARCH (arm64 / 64)</string>
 		<key>categories</key>
 		<array>
 			<string>Development &amp; Design</string>
