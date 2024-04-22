@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of Code and imports it into Intune.</string>
     <key>Identifier</key>
-    <string>com.github.ekristensen14.intune.Code</string>
+    <string>com.github.ekristensen14.intune.Code1</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
