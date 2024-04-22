@@ -7,7 +7,7 @@
     <key>Input</key>
     <dict>
         <key>ARCH</key>
-        <string>arm64 / x86_64</string>
+        <string>x86_64</string>
         <key>NAME</key>
         <string>OpenVPNConnectClient3</string>
         <key>DERIVE_MIN_OS</key>
@@ -17,7 +17,7 @@
         <key>developer</key>
         <string>OpenVPN</string>
         <key>display_namee</key>
-        <string>OpenVPN Connect - %ARCH%</string>
+        <string>OpenVPN Connect</string>
 		<key>categories</key>
 		<array>
 			<string>Other apps</string>
