@@ -15,7 +15,7 @@
 		<key>developer</key>
 		<string>Dialpad, Inc.</string>
 		<key>display_namee</key>
-		<string>Dialpad</string>
+		<string>Dialpad - %PLATFORM_ARCH%</string>
 		<key>categories</key>
         <array>
             <string>Productivity</string>
