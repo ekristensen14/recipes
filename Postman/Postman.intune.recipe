@@ -8,7 +8,9 @@
 	<string>com.github.ekristensen14.intune.Postman</string>
 	<key>Input</key>
 	<dict>
-		<key>NAME</key>
+		<key>PLATFORM_ARCH</key>
+		<string>arm64 / 64</string>
+		<key>NAME-%PLATFORM_ARCH%</key>
 		<string>Postman</string>
 		<key>description</key>
 		<string>Create and send any HTTP request using the awesome Postman request builder. Write your own test cases to validate response data, response times, and more!</string>
@@ -16,8 +18,6 @@
 		<string>Postdot Technologies, Inc</string>
 		<key>display_namee</key>
 		<string>Postman - %PLATFORM_ARCH%</string>
-		<key>PLATFORM_ARCH</key>
-		<string>Insert ARCH (arm64 / 64)</string>
 		<key>categories</key>
 		<array>
 			<string>Development &amp; Design</string>

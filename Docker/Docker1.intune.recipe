@@ -8,7 +8,9 @@
     <string>com.github.ekristensen14.intune.Docker1</string>
     <key>Input</key>
     <dict>
-        <key>NAME</key>
+        <key>PLATFORM_ARCH</key>
+        <string>arm64 / amd64</string>
+        <key>NAME-%PLATFORM_ARCH%</key>
         <string>Docker</string>
         <key>description</key>
         <string>Docker Desktop &#8211; the fastest way to containerize applications.</string>
@@ -16,8 +18,6 @@
         <string>Docker</string>
         <key>display_namee</key>
         <string>Docker Desktop - %PLATFORM_ARCH%</string>
-        <key>PLATFORM_ARCH</key>
-        <string>arm64 / amd64</string>
         <key>categories</key>
         <array>
             <string>Development &amp; Design</string>
