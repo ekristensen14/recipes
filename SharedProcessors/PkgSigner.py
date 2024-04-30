@@ -32,10 +32,6 @@ class PkgSigner(Processor):
     				"you can give it access to the correct key so that autopkg can run",
     				"without manual intervention." )
     input_variables = {
-        "app_path":{
-            "required": True,
-            "description": "Path the the app that needs to be built"
-        },
         "pkg_path": {
             "required": True,
             "description": "Path to the package to be signed"
@@ -56,76 +52,24 @@ class PkgSigner(Processor):
     def main(self):
 
     	# rename unsigned package so that we can slot the signed package into place
-        app_path = self.env[ "app_path" ]
-        app_dir = os.path.dirname( self.env[ "app_path" ] )
-        app_base_name = os.path.basename( self.env[ "app_path" ] )
-        ( app_name_no_extension, app_extension ) = os.path.splitext( app_base_name )
-
         pkg_dir = os.path.dirname( self.env[ "pkg_path" ] )
         pkg_base_name = os.path.basename( self.env[ "pkg_path" ] )
         ( pkg_name_no_extension, pkg_extension ) = os.path.splitext( pkg_base_name )
-        intermediate = os.path.join( pkg_dir, pkg_name_no_extension + "-intermediate" + pkg_extension )
-        os.remove( self.env[ "pkg_path" ] )
-        distributionFile = pkg_dir + "/distribution.xml"
-        
-        test_command = [
-            "/usr/bin/productbuild", \
-            "--component", \
-            app_path, \
-            "/Applications", \
-            intermediate
-        ]
-        print(test_command)
-        subprocess.call( test_command )
 
-        test_command2 = [
-            "/usr/bin/productsign", \
-            "--sign", \
-            self.env[ "signing_cert" ], \
-            intermediate, \
-            self.env[ "pkg_path" ]
-        ]
-        print(test_command2)
-        subprocess.call( test_command2 )
-""""
-        command_line_list = ["/usr/bin/pkgbuild", \
-                             "--install-location", \
-                             "/Applications", \
-                             "--component", \
-                             app_path, \
-                             intermediate]
-        print(command_line_list)
-        subprocess.call( command_line_list )
+        unsigned_pkg_path = os.path.join( pkg_dir, pkg_name_no_extension + "-unsigned" + pkg_extension )
+        os.rename( self.env[ "pkg_path" ], unsigned_pkg_path )
 
-
-        command_line_list1 = [ "/usr/bin/productbuild", \
-                              "--synthesize", \
-                              "--package", \
-                              intermediate, \
-                              distributionFile ]
-        print(command_line_list1)
-        subprocess.call( command_line_list1 )
-
-        final_unsigned = os.path.join( pkg_dir, pkg_name_no_extension + "-final_unsigned" + pkg_extension )
-        command_line_list2 = [ "sudo", \
-                                "/usr/bin/productbuild", \
-                                "--distribution", \
-                                distributionFile, \
-                                "--package-path", \
-                                intermediate, \
-                                final_unsigned ]
-        print(command_line_list2)
-        subprocess.call( command_line_list2 )
-        ##os.remove(intermediate)
-        ##os.remove(distributionFile)
-        command_line_list3 = [ "/usr/bin/productsign", \
+        command_line_list = [ "/usr/bin/productsign", \
                               "--sign", \
                               self.env[ "signing_cert" ], \
-                              final_unsigned, \
+                              unsigned_pkg_path, \
                               self.env[ "pkg_path" ] ]
-        print(command_line_list3)
-        subprocess.call( command_line_list3 )
-"""
+
+        print(command_line_list)
+
+        # print command_line_list
+        subprocess.call( command_line_list )
+
 
 
 
