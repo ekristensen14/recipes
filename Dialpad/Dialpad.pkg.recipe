@@ -14,7 +14,7 @@
     <key>MinimumVersion</key>
     <string>1.4.1</string>
     <key>ParentRecipe</key>
-    <string>com.github.autopkg.ekristensen14.download.Dialpad</string>
+    <string>com.github.ekristensen14.download.Dialpad</string>
     <key>Process</key>
     <array>
         <dict>
