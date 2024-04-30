@@ -22,11 +22,13 @@
         <array>
             <string>Productivity</string>
         </array>
+        <key>SIGNINGCERTIFICATE</key>
+        <string>Put_Signing_Certificate_into_AutoPkg_recipe_override</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
-	<string>com.github.ekristensen14.download.Dialpad</string>
+	<string>com.github.ekristensen14.pkg.Dialpad</string>
 	<key>Process</key>
 	<array>
         <dict>
