@@ -99,7 +99,7 @@
                <key>signing_cert</key>
                 <string>%SIGNINGCERTIFICATE%</string>
                 <key>output_pkg_name</key>
-                <string>%NAME%-signed.pkg</string>
+                <string>%RECIPE_CACHE_DIR%/%NAME%-signed.pkg</string>
             </dict>  
         </dict>
     </array>
