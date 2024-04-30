@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Builds a package from a downloaded Dialpad download.</string>
     <key>Identifier</key>
-    <string>com.github.autopkg.mikestechshop.pkg.Dialpad</string>
+    <string>com.github.autopkg.ekristensen14.pkg.Dialpad</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
