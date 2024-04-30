@@ -91,23 +91,16 @@
         </dict>
         <dict>
           <key>Processor</key>
-            <string>com.github.ekristensen14.SharedProcessors/DistributionPackageCreator</string>
-            <key>Arguments</key>
-            <dict>
-               <key>pkg_path</key>
-               <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
-            </dict>  
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>com.github.ekristensen14.SharedProcessors/PkgSigner</string>
+            <string>com.github.ekristensen14.SharedProcessors/ComponentPkgWrapper</string>
             <key>Arguments</key>
             <dict>
                <key>pkg_path</key>
                <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
                <key>signing_cert</key>
-               <string>%SIGNINGCERTIFICATE%</string>
-            </dict>
+                <string>%SIGNINGCERTIFICATE%</string>
+                <key>output_pkg_name</key>
+                <string>%NAME%-signed.pkg</string>
+            </dict>  
         </dict>
     </array>
 </dict>
