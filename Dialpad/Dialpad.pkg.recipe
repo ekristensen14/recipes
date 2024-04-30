@@ -100,7 +100,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.ekristensen14.SharedProcessors/PkgSigner</string>
+            <string>com.github.ekristensen14.SharedProcessors/PkgSigner</string>
             <key>Arguments</key>
             <dict>
                <key>pkg_path</key>
