@@ -65,7 +65,15 @@
 			<dict>
 				<key>pkg_request</key>
 				<dict>
-					<key>chown</key>
+                	<key>pkgname</key>
+				    <string>%NAME%-%version%</string>
+					<key>id</key>
+					<string>com.electron.dialpad.pkg</string>
+					<key>options</key>
+					<string>purge_ds_store</string>
+					<key>pkgdir</key>
+					<string>%RECIPE_CACHE_DIR%</string>
+                    <key>chown</key>
 					<array>
 						<dict>
 							<key>group</key>
@@ -76,15 +84,7 @@
 							<string>root</string>
 						</dict>
 					</array>
-					<key>id</key>
-					<string>com.electron.dialpad.pkg</string>
-					<key>options</key>
-					<string>purge_ds_store</string>
-					<key>pkgdir</key>
-					<string>%RECIPE_CACHE_DIR%</string>
 				</dict>
-				<key>pkgname</key>
-				<string>%NAME%-%ARCH%-%version%</string>
 			</dict>
 			<key>Processor</key>
 			<string>PkgCreator</string>
