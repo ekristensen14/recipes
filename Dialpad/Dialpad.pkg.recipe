@@ -73,8 +73,8 @@
                     <string>com.electron.dialpad.pkg</string>
                     <key>options</key>
                     <string>purge_ds_store</string>
-                    <key>scripts</key>
-                    <string>scripts</string>
+                    <key>install_location</key>
+                    <string>/Applications</string>
                 </dict>
             </dict>
         </dict>
