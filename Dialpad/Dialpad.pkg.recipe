@@ -96,6 +96,7 @@
                 <key>signing_cert</key>
                 <string>%SIGNINGCERTIFICATE%</string>
             </dict>
+        </dict>
     </array>
 </dict>
 </plist>
