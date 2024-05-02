@@ -49,7 +49,7 @@ class PkgBuilder(Processor):
         
         command_line_list.extend(["--root", self.env["pkgroot"]])
         command_line_list.extend(["--component-plist", self.generateComponentPlist()])
-        command_line_list.append(self.env["output_pkg_name"])
+        command_line_list.append(self.env["output_pkg_dir"] + "/" + self.env["output_pkg_name"])
 
         print(command_line_list)
 
