@@ -48,8 +48,7 @@
                         <key>path</key>
                         <string>/Applications</string>
                     </dict>
-                <dict>
-                </dict>
+                </array>
             </dict>
         </dict>
         <dict>
