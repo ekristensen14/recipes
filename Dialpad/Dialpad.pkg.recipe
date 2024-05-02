@@ -35,22 +35,20 @@
                 <string>%pathname%</string>
             </dict>
         </dict>
-        <dict>
-            <key>Processor</key>
-            <string>PkgRootCreator</string>
-            <key>Arguments</key>
-            <dict>
-                <key>pkgroot</key>
-                <string>%RECIPE_CACHE_DIR%/%NAME%</string>
-                <key>pkgdirs</key>
-                <array>
-                    <dict>
-                        <key>path</key>
-                        <string>/Applications</string>
-                    </dict>
-                </array>
-            </dict>
-        </dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgdirs</key>
+				<dict>
+					<key>Applications</key>
+					<string>0775</string>
+				</dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%</string>
+			</dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>Copier</string>
@@ -62,24 +60,35 @@
                 <string>%pkgroot%/Applications/%NAME%.app</string>
             </dict>
         </dict>
-        <dict>
-            <key>Processor</key>
-            <string>PkgCreator</string>
-            <key>Arguments</key>
-            <dict>
-                <key>pkg_request</key>
-                <dict>
-                    <key>pkgname</key>
-                    <string>%NAME%-%version%</string>
-                    <key>pkgdir</key>
-                    <string>%RECIPE_CACHE_DIR%</string>
-                    <key>id</key>
-                    <string>com.electron.dialpad.pkg</string>
-                    <key>options</key>
-                    <string>purge_ds_store</string>
-                </dict>
-            </dict>
-        </dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_request</key>
+				<dict>
+					<key>chown</key>
+					<array>
+						<dict>
+							<key>group</key>
+							<string>admin</string>
+							<key>path</key>
+							<string>Applications</string>
+							<key>user</key>
+							<string>root</string>
+						</dict>
+					</array>
+					<key>id</key>
+					<string>com.electron.dialpad.pkg</string>
+					<key>options</key>
+					<string>purge_ds_store</string>
+					<key>pkgdir</key>
+					<string>%RECIPE_CACHE_DIR%</string>
+				</dict>
+				<key>pkgname</key>
+				<string>%NAME%-%ARCH%-%version%</string>
+			</dict>
+			<key>Processor</key>
+			<string>PkgCreator</string>
+		</dict>
         <dict>
           <key>Processor</key>
             <string>com.github.ekristensen14.SharedProcessors/ComponentPkgWrapper</string>
