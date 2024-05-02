@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Define the installation location
+INSTALL_LOCATION="/Applications"
+
+# Ensure that the installation location exists
+mkdir -p "$INSTALL_LOCATION"
+
+# Move the application to the installation location
+/bin/mv -v "$1/Dialpad.app" "$INSTALL_LOCATION"
+
+# Optionally, set permissions and ownership for the installed application
+# Replace OWNER:GROUP with appropriate values
+# chown -R OWNER:GROUP "$INSTALL_LOCATION/Dialpad.app"
+# chmod -R 755 "$INSTALL_LOCATION/Dialpad.app"
