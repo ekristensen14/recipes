@@ -71,8 +71,25 @@
                 <string>/Applications</string>
                 <key>output_pkg_dir</key>
                 <string>%RECIPE_CACHE_DIR%</string>
+                <key>chown</key>
+                <array>
+                    <dict>
+                        <key>path</key>
+                        <string>Applications</string>
+                        <key>user</key>
+                        <string>root</string>
+                        <key>group</key>
+                        <string>admin</string>
+                    </dict>
+                </array>
                 <key>output_pkg_name</key>
                 <string>%NAME%-%version%.pkg</string>
+                <key>name</key>
+                <string>%NAME%</string>
+                <key>version</key>
+                <string>%version%</string>
+                <key>id</key>
+                <string>%bundleid%</string>
             </dict>
         </dict>
         <dict>
