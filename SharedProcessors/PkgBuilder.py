@@ -69,11 +69,9 @@ class PkgBuilder(Processor):
     
     
     def __init__(self):
-        Processor.__init__(self)
         self.tmproot = None
         self.uid = os.getuid()
         self.gid = os.getgid()
-        self.name = self.env["name"]
 
     def main(self):
         self.create_tmp_pkgroot()
@@ -91,7 +89,7 @@ class PkgBuilder(Processor):
         os.chown(self.tmp_pkgroot, 0, 80)
         try:
             p = subprocess.Popen(
-                ("/usr/bin/ditto", self.request["pkgroot"], self.tmp_pkgroot),
+                ("/usr/bin/ditto", self.env["pkgroot"], self.tmp_pkgroot),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -103,7 +101,7 @@ class PkgBuilder(Processor):
             )
         if p.returncode != 0:
             raise ProcessorError(
-                f"Couldn't copy pkgroot from {self.request['pkgroot']} to "
+                f"Couldn't copy pkgroot from {self.env['pkgroot']} to "
                 f"{self.tmp_pkgroot}: {' '.join(str(err).split())}"
             )
 
@@ -244,9 +242,9 @@ class PkgBuilder(Processor):
                 )
         # Use a temporary name while building.
         temppkgname = (
-            f"autopkgtmp-{self.random_string(16)}-{self.request['pkgname']}.pkg"
+            f"autopkgtmp-{self.random_string(16)}-{self.env['output_pkg_name']}"
         )
-        temppkgpath = os.path.join(self.request["pkgdir"], temppkgname)
+        temppkgpath = os.path.join(self.env["output_pkg_dir"], temppkgname)
         # Wrap package building in try/finally to remove temporary package if
         # it fails.
         try:
@@ -267,9 +265,9 @@ class PkgBuilder(Processor):
             if self.env["install-location"]:
                 cmd.extend(["--install-location", self.env["install-location"]])
             if self.env["infofile"]:
-                cmd.extend(["--info", self.request["infofile"]])
+                cmd.extend(["--info", self.env["infofile"]])
             if self.env["scripts"]:
-                cmd.extend(["--scripts", self.request["scripts"]])
+                cmd.extend(["--scripts", self.env["scripts"]])
             cmd.append(temppkgpath)
             # Execute pkgbuild.
             try:
