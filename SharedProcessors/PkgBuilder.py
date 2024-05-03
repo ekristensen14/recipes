@@ -37,7 +37,8 @@ class PkgBuilder(Processor):
     def generateComponentPlist(self):
         command_line_list = ["/usr/bin/pkgbuild", "--analyze", "--root", self.env["pkgroot"], self.env["output_pkg_dir"] + "/component.plist"]
         subprocess.call(command_line_list)
-        return self.env["output_pkg_dir"] + "/component.plist"
+        componentPlist = self.env["output_pkg_dir"] + "/component.plist"
+        return componentPlist
     
     def main(self):
         pkg_dir = os.path.dirname( self.env[ "output_pkg_dir" ] )

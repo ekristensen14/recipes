@@ -1,53 +1,69 @@
 #!/usr/local/autopkg/python
+#
+# Copyright 2010 Per Olofsson
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
+
+import plistlib
 import subprocess
 import os
 
-from autopkglib import Processor
+from autopkglib import Processor, ProcessorError
+
 
 __all__ = ["ComponentPkgWrapper"]
 
+
 class ComponentPkgWrapper(Processor):
-    description = ( "Wraps an existing component pkg into a distribution pkg using ProductBuild." )
+    description = "Creates a distribution package from an existing component package using ProductBuild."
     input_variables = {
         "pkg_path": {
             "required": True,
-            "description": "Path to the component package."
+            "description": "Path to the component package used to create the distribution package",
         },
-        "signing_cert": {
-            "required": False,
-            "description": "Optional name of the certificate used to sign the package. Must be an EXACT match. "
-        },
-        "output_pkg_name": {
-            "required": True,
-            "description": "The name of the output distribution package."
-        }
     }
     output_variables = {
-        "pkg_path": {
-             "description": "Path to the output distribution package."
-        }
+        "pkg_path": {"description": "Path to the distribution package."}
     }
 
     __doc__ = description
 
     def main(self):
-        pkg_dir = os.path.dirname( self.env[ "pkg_path" ] )
 
-        command_line_list = [ "/usr/bin/productbuild" ]
+        # Rename component package so that we can retain the original name for the distribution package.
+        pkg_dir = os.path.dirname(self.env["pkg_path"])
+        pkg_base_name = os.path.basename(self.env["pkg_path"])
+        (pkg_name_no_extension, pkg_extension) = os.path.splitext(pkg_base_name)
 
-        if self.env["signing_cert"]:
-            command_line_list.extend(["--sign", self.env["signing_cert"]])
-        
-        command_line_list.extend(["--package", self.env["pkg_path"]])
-        command_line_list.append(self.env["output_pkg_name"])
+        component_pkg_path = os.path.join(
+            pkg_dir, pkg_name_no_extension + "-component" + pkg_extension
+        )
+        os.rename(self.env["pkg_path"], component_pkg_path)
+
+        command_line_list = [
+            "/usr/bin/productbuild",
+            "--package",
+            component_pkg_path,
+            self.env["pkg_path"],
+        ]
 
         print(command_line_list)
 
+        # print command_line_list
         subprocess.call(command_line_list)
 
-        self.env["pkg_path"] = os.path.join(pkg_dir, self.env['output_pkg_name'])
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     processor = ComponentPkgWrapper()
     processor.execute_shell()

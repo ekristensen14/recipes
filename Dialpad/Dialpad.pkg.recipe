@@ -82,8 +82,6 @@
             <dict>
                <key>pkg_path</key>
                <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
-                <key>output_pkg_name</key>
-                <string>%RECIPE_CACHE_DIR%/%NAME%.pkg</string>
             </dict>  
         </dict>
         <dict>
@@ -92,7 +90,7 @@
             <key>Arguments</key>
             <dict>
                 <key>pkg_path</key>
-                <string>%RECIPE_CACHE_DIR%/%NAME%.pkg</string>
+                <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
                 <key>signing_cert</key>
                 <string>%SIGNINGCERTIFICATE%</string>
             </dict>
