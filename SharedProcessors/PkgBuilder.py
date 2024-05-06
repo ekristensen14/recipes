@@ -105,13 +105,12 @@ class PkgBuilder(Processor):
     
     def verify_env(self):
         # Check name.
-        if len(self.env["pkgname"]) > 80:
+        if len(self.env["output_pkg_name"]) > 80:
             raise ProcessorError("Package name too long")
-        if not self.re_pkgname.search(self.env["pkgname"]):
+        if not self.re_pkgname.search(self.env["output_pkg_name"]):
             raise ProcessorError("Invalid package name")
-        if self.env["pkgname"].lower().endswith(".pkg"):
+        if self.env["output_pkg_name"].lower().endswith(".pkg"):
             raise ProcessorError("Package name mustn't include '.pkg'")
-        self.log.debug("pkgname ok")
 
         # Check ID.
         if len(self.env["id"]) > 80:
