@@ -71,28 +71,99 @@ class PkgBuilder(Processor):
     def main(self):
         self.uid = os.getuid()
         self.gid = os.getgid()
-        self.copy_pkgroot()
-        #self.apply_chown()
-        self.generateComponentPlist()
-        self.env["pkg_path"] = self.create_pkg()
-        self.cleanup()
+        self.re_pkgname = re.compile(r"^[a-z0-9][a-z0-9 ._\-]*$", re.I)
+        self.re_id = re.compile(r"^[a-z0-9]([a-z0-9 \-]*[a-z0-9])?$", re.I)
+        self.re_version = re.compile(r"^[a-z0-9_ ]*[0-9][a-z0-9_ -]*$", re.I)
+        for key in (
+            "pkgroot",
+            "output_pkg_dir",
+            "output_pkg_name",
+            "name",
+            "id",
+            "version",
+            "install-location",
+            "infofile",
+            "scripts",
+            "chown",
+        ):
+            if key in self.env:
+                self.env[key] = self.env[key]
+            elif key in ["install-location", "infofile", "scripts", "chown"]:
+                # Optional variables
+                self.env[key] = ""
+            else:
+                raise ProcessorError(f"Missing required input variable: {key}")
+            
+        try:
+            self.verify_env()
+            self.copy_pkgroot()
+            self.generateComponentPlist()
+            self.env["pkg_path"] = self.create_pkg()
+        finally:
+            self.cleanup()
     
+    def verify_env(self):
+        # Check name.
+        if len(self.env["pkgname"]) > 80:
+            raise ProcessorError("Package name too long")
+        if not self.re_pkgname.search(self.env["pkgname"]):
+            raise ProcessorError("Invalid package name")
+        if self.env["pkgname"].lower().endswith(".pkg"):
+            raise ProcessorError("Package name mustn't include '.pkg'")
+        self.log.debug("pkgname ok")
+
+        # Check ID.
+        if len(self.env["id"]) > 80:
+            raise ProcessorError("Package id too long")
+        components = self.env["id"].split(".")
+        if len(components) < 2:
+            raise ProcessorError("Invalid package id")
+        for comp in components:
+            if not self.re_id.search(comp):
+                raise ProcessorError("Invalid package id")
+
+        # Check version.
+        if len(self.env["version"]) > 40:
+            raise ProcessorError("Version too long")
+        components = self.env["version"].split(".")
+        if len(components) < 1:
+            raise ProcessorError(f"Invalid version \"{self.env['version']}\"")
+        for comp in components:
+            if not self.re_version.search(comp):
+                raise ProcessorError(f'Invalid version component "{comp}"')
+
+        # Make sure infofile and resources exist and can be read.
+        if self.env["infofile"]:
+            try:
+                with open(self.env["infofile"], "rb"):
+                    pass
+            except OSError as e:
+                raise ProcessorError(f"Can't open infofile: {e}")
+
+        # Make sure scripts is a directory and its contents
+        # are executable.
+        if self.env["scripts"]:
+            if self.env["pkgtype"] == "bundle":
+                raise ProcessorError(
+                    "Installer scripts are not supported with bundle package types."
+                )
+            if not os.path.isdir(self.env["scripts"]):
+                raise ProcessorError(
+                    f"Can't find scripts directory: {self.env['scripts']}"
+                )
+            for script in ["preinstall", "postinstall"]:
+                script_path = os.path.join(self.env["scripts"], script)
+                if os.path.exists(script_path) and not os.access(script_path, os.X_OK):
+                    raise ProcessorError(
+                        f"{script} script found in {self.env['scripts']} but it is "
+                        "not executable!"
+                    )
+        
     def copy_pkgroot(self):
         """Copy pkgroot to temporary directory."""
-
         self.tmproot = tempfile.mkdtemp()
         self.tmp_pkgroot = os.path.join(self.tmproot, self.env["name"])
         os.mkdir(self.tmp_pkgroot)
-        """
-        try:
-            os.chmod(self.tmp_pkgroot, 0o1775)
-        except OSError as e:
-            raise ProcessorError(f"Can't chmod {self.tmp_pkgroot}: {e}")
-        try:
-            os.chown(self.tmp_pkgroot, 0, 80)
-        except OSError as e:
-            raise ProcessorError(f"Can't chown {self.tmp_pkgroot}: {e}")
-        """
         try:
             p = subprocess.Popen(
                 ("/usr/bin/ditto", self.env["pkgroot"], self.tmp_pkgroot),
@@ -112,75 +183,6 @@ class PkgBuilder(Processor):
             )
 
 
-    def apply_chown(self):
-        """Change owner and group, and permissions if the 'mode' key was set."""
-
-        def verify_relative_valid_path(root, path):
-            if len(path) < 1:
-                raise ProcessorError("Empty chown path")
-
-            checkpath = root
-            parts = path.split(os.sep)
-            for part in parts:
-                if part in (".", ".."):
-                    raise ProcessorError(". and .. is not allowed in chown path")
-                checkpath = os.path.join(checkpath, part)
-                relpath = checkpath[len(root) + 1 :]
-                if not os.path.exists(checkpath):
-                    raise ProcessorError(f"chown path {relpath} does not exist")
-                if os.path.islink(checkpath):
-                    raise ProcessorError(f"chown path {relpath} is a soft link")
-
-        for entry in self.env["chown"]:
-            # Check path.
-            verify_relative_valid_path(self.tmp_pkgroot, entry["path"])
-            # Check user.
-            if isinstance(entry["user"], str):
-                try:
-                    uid = pwd.getpwnam(entry["user"]).pw_uid
-                except KeyError:
-                    raise ProcessorError(f"Unknown chown user {entry['user']}")
-            else:
-                uid = int(entry["user"])
-            if uid < 0:
-                raise ProcessorError(f"Invalid uid {uid}")
-            # Check group.
-            if isinstance(entry["group"], str):
-                try:
-                    gid = grp.getgrnam(entry["group"]).gr_gid
-                except KeyError:
-                    raise ProcessorError(f"Unknown chown group {entry['group']}")
-            else:
-                gid = int(entry["group"])
-            if gid < 0:
-                raise ProcessorError(f"Invalid gid {gid}")
-
-            # If an absolute path is passed in entry["path"], os.path.join
-            # will not join it to the tmp_pkgroot. We need to strip out
-            # the leading / to make sure we only touch the pkgroot.
-            chownpath = os.path.join(self.tmp_pkgroot, entry["path"].lstrip("/"))
-            if "mode" in list(entry.keys()):
-                chmod_present = True
-            else:
-                chmod_present = False
-            if os.path.isfile(chownpath):
-                os.lchown(chownpath, uid, gid)
-                if chmod_present:
-                    os.lchmod(chownpath, int(entry["mode"], 8))
-            else:
-                for (dirpath, dirnames, filenames) in os.walk(chownpath):
-                    try:
-                        os.lchown(dirpath, uid, gid)
-                    except OSError as e:
-                        raise ProcessorError(f"Can't lchown {dirpath}: {e}")
-                    for path_entry in dirnames + filenames:
-                        path = os.path.join(dirpath, path_entry)
-                        try:
-                            os.lchown(path, uid, gid)
-                            if chmod_present:
-                                os.lchmod(path, int(entry["mode"], 8))
-                        except OSError as e:
-                            raise ProcessorError(f"Can't lchown {path}: {e}")
 
     def random_string(self, length):
         rand = os.urandom(int((length + 1) / 2))
