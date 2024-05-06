@@ -277,7 +277,7 @@ class PkgBuilder(Processor):
                 cmd.extend(["--info", self.env["infofile"]])
             if self.env["scripts"]:
                 cmd.extend(["--scripts", self.env["scripts"]])
-            cmd.append(temppkgpath)
+            cmd.append(pkgpath)
             print(cmd)
             # Execute pkgbuild.
             try:
@@ -294,29 +294,22 @@ class PkgBuilder(Processor):
                     f"pkgbuild failed with exit code {p.returncode}: "
                     f"{' '.join(str(err).split())}"
                 )
-            # Change to final name and owner.
-            try:
-                os.rename(temppkgpath, pkgpath)
-            except OSError as e:
-                raise ProcessorError(
-                    f"Can't rename {temppkgpath} to {pkgpath}: {e.strerror}"
-                )
-            try:
-                os.chown(pkgpath, self.uid, self.gid)
-            except OSError as e:
-                raise ProcessorError(
-                    f"Can't change owner of {pkgpath} to {self.uid}: {e.strerror}"
-                )
 
             return pkgpath
         finally:
-            # Remove temporary package.
-            try:
-                os.remove(temppkgpath)
-            except OSError as e:
-                if e.errno != 2:
-                    self.log.warn(
-                        f"Can't remove temporary package at {temppkgpath}: {e.strerror}"
+            if os.path.exists(temppkgpath):
+                try:
+                    if os.lstat(temppkgpath).st_uid != self.uid:
+                        raise ProcessorError(
+                            f"Temporary pkg {temppkgpath} not owned by {self.uid}"
+                        )
+                    if os.path.islink(temppkgpath) or os.path.isfile(temppkgpath):
+                        os.remove(temppkgpath)
+                    else:
+                        shutil.rmtree(temppkgpath)
+                except OSError as e:
+                    raise ProcessorError(
+                        f"Can't remove temporary pkg {temppkgpath}: {e.strerror}"
                     )
     def cleanup(self):
         """Clean up resources."""
