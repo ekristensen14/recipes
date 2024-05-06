@@ -91,7 +91,7 @@ from PkgPackager import Packager, PackagerError
 ###############
 
 
-APPNAME = "autopkgserver"
+APPNAME = "autopkgserver2"
 VERSION = "0.2"
 
 SOCKET = f"/var/run/{APPNAME}"
@@ -265,7 +265,7 @@ class PkgHandler(socketserver.StreamRequestHandler):
             return
 
 
-class AutoPkgServer(socketserver.UnixStreamServer):
+class AutoPkgServer2(socketserver.UnixStreamServer):
     """Daemon that runs as root, receiving requests to create installer
     packages."""
 
@@ -358,7 +358,7 @@ def main(argv):
     import launch2
 
     try:
-        sockets = launch2.launch_activate_socket("AutoPkgServer")
+        sockets = launch2.launch_activate_socket("AutoPkgServer2")
     except launch2.LaunchDError as err:
         print(f"launchd check-in failed: {err}", file=sys.stderr)
         time.sleep(10)
@@ -367,7 +367,7 @@ def main(argv):
     sock_fd = sockets[0]
 
     # Create the server object.
-    server = AutoPkgServer(sock_fd, PkgHandler)
+    server = AutoPkgServer2(sock_fd, PkgHandler)
     server.setup_logging()
 
     # Wrap main loop in try/finally to unlink the socket when we exit.
