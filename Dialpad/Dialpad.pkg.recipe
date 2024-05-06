@@ -37,59 +37,12 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>PkgRootCreator</string>
+            <string>AppPkgCreator</string>
             <key>Arguments</key>
             <dict>
-                <key>pkgroot</key>
-                <string>%RECIPE_CACHE_DIR%/%NAME%</string>
-                <key>pkgdirs</key>
-                <dict>
-                    <key>Applications</key>
-                    <string>0775</string>
-                </dict>
+                <key>app_path</key>
+                <string>%pathname%/Dialpad.app</string>
             </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>Copier</string>
-            <key>Arguments</key>
-            <dict>
-                <key>source_path</key>
-                <string>%pathname%/%NAME%.app</string>
-                <key>destination_path</key>
-                <string>%pkgroot%/Applications/%NAME%.app</string>
-            </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>com.github.ekristensen14.SharedProcessors/PkgBuilder</string>
-            <key>Arguments</key>
-			<dict>
-				<key>pkg_request</key>
-				<dict>
-					<key>chown</key>
-					<array>
-						<dict>
-							<key>group</key>
-							<string>admin</string>
-							<key>path</key>
-							<string>Applications</string>
-							<key>user</key>
-							<string>root</string>
-						</dict>
-					</array>
-					<key>id</key>
-					<string>%BUNDLE_ID%</string>
-					<key>options</key>
-					<string>purge_ds_store</string>
-					<key>pkgname</key>
-					<string>%NAME%-%version%</string>
-					<key>version</key>
-					<string>%version%</string>
-                    <key>install_location</key>
-                    <string>/Applications</string>
-				</dict>
-			</dict>
         </dict>
         <dict>
           <key>Processor</key>
