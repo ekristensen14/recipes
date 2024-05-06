@@ -72,7 +72,7 @@ class PkgBuilder(Processor):
         self.uid = os.getuid()
         self.gid = os.getgid()
         self.copy_pkgroot()
-        self.apply_chown()
+        #self.apply_chown()
         self.generateComponentPlist()
         self.env["pkg_path"] = self.create_pkg()
         self.cleanup()
