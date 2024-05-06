@@ -16,6 +16,8 @@ __all__ = ["PkgBuilder"]
 
 class PkgBuilder(Processor):
     description = ( "Wraps pkg root into a component pkg using PkgBuild." )
+    __doc__ = description
+
     input_variables = {
         "pkgroot": {
             "required": True,
@@ -65,23 +67,19 @@ class PkgBuilder(Processor):
         }
     }
     
-    __doc__ = description
-    
-    
-    def __init__(self):
-        self.tmproot = None
-        self.uid = os.getuid()
-        self.gid = os.getgid()
 
     def main(self):
-        self.create_tmp_pkgroot()
+        self.uid = os.getuid()
+        self.gid = os.getgid()
+        self.copy_pkgroot()
         self.apply_chown()
         self.generateComponentPlist()
         self.env["pkg_path"] = self.create_pkg()
         self.cleanup()
     
-    def create_tmp_pkgroot(self):
-        """Create a temporary pkgroot."""
+    def copy_pkgroot(self):
+        """Copy pkgroot to temporary directory."""
+
         self.tmproot = tempfile.mkdtemp()
         self.tmp_pkgroot = os.path.join(self.tmproot, self.env["name"])
         os.mkdir(self.tmp_pkgroot)
@@ -104,6 +102,7 @@ class PkgBuilder(Processor):
                 f"Couldn't copy pkgroot from {self.env['pkgroot']} to "
                 f"{self.tmp_pkgroot}: {' '.join(str(err).split())}"
             )
+
 
     def apply_chown(self):
         """Change owner and group, and permissions if the 'mode' key was set."""
