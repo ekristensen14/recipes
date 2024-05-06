@@ -66,22 +66,23 @@ class PkgBuilder(Processor):
 
     def main(self):
         for key in (
-        "pkgroot",
-        "install-location",
-        "output_pkg_dir",
-        "output_pkg_name",
-        "infofile",
-        "scripts",
-        "name",
-        "id",
-        "version",
-        ):  
-            if key not in self.env:
-                self.env[key] = self.env.get(key)
-            elif key in ["install-location", "infofile", "scripts"]:
+            "pkgroot",
+            "output_pkg_dir",
+            "output_pkg_name",
+            "name",
+            "id",
+            "version",
+            "install-location",
+            "infofile",
+            "scripts",
+        ):
+            if key in self.env:
+                self.env[key] = self.env[key]
+            elif key in ["install-location", "infofile", "scripts", "chown"]:
+                # Optional variables
                 self.env[key] = ""
             else:
-                raise ProcessorError(f"{key} is not defined.")        
+                raise ProcessorError(f"Missing required input variable: {key}")  
         self.create_tmp_pkgroot()
         self.generateComponentPlist()
         self.env["pkg_path"] = self.create_pkg()
