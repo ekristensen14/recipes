@@ -24,7 +24,7 @@ from xml.etree import ElementTree as ET
 from autopkglib import Processor, ProcessorError
 
 AUTO_PKG_SOCKET = "/Users/erebacz/Library/AutoPkg/RecipeRepos/com.github.ekristensen14.recipes/SharedProcessors/autopkgserver2"
-
+subprocess.Popen(["/Users/erebacz/Library/AutoPkg/RecipeRepos/com.github.ekristensen14.recipes/SharedProcessors/autopkgserver2", AUTO_PKG_SOCKET])
 
 __all__ = ["PkgBuilder"]
 
@@ -179,11 +179,12 @@ class PkgBuilder(Processor):
             "resources",
             "options",
             "scripts",
+            "install-location",
         ):
             if key not in request:
                 if key in self.env:
                     request[key] = self.env[key]
-                elif key in ["infofile", "resources", "options", "scripts"]:
+                elif key in ["infofile", "resources", "options", "scripts", "install-location"]:
                     # these keys are optional, so empty string value is OK
                     request[key] = ""
                 elif key == "pkgtype":
@@ -198,7 +199,7 @@ class PkgBuilder(Processor):
 
         # Convert relative paths to absolute.
         for key, value in list(request.items()):
-            if key in ("pkgroot", "pkgdir", "infofile", "resources", "scripts"):
+            if key in ("pkgroot", "pkgdir", "infofile", "resources", "scripts", "install-location"):
                 if value and not value.startswith("/"):
                     # search for it
                     request[key] = self.find_path_for_relpath(value)
