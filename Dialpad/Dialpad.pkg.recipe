@@ -82,8 +82,8 @@
                         <string>admin</string>
                     </dict>
                 </array>
-                <key>output_pkg_name</key>
-                <string>%NAME%-%version%.pkg</string>
+                <key>pkgname</key>
+                <string>%NAME%-%version%</string>
                 <key>name</key>
                 <string>%NAME%</string>
                 <key>version</key>

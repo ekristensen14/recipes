@@ -31,7 +31,7 @@ class PkgBuilder(Processor):
             "required": True,
             "description": "Path to the output directory."
         },
-        "output_pkg_name": {
+        "pkgname": {
             "required": True,
             "description": "The name of the output distribution package."
         },
@@ -78,7 +78,7 @@ class PkgBuilder(Processor):
         for key in (
             "pkgroot",
             "output_pkg_dir",
-            "output_pkg_name",
+            "pkgname",
             "name",
             "id",
             "version",
@@ -105,11 +105,11 @@ class PkgBuilder(Processor):
     
     def verify_env(self):
         # Check name.
-        if len(self.env["output_pkg_name"]) > 80:
+        if len(self.env["pkgname"]) > 80:
             raise ProcessorError("Package name too long")
-        if not self.re_pkgname.search(self.env["output_pkg_name"]):
+        if not self.re_pkgname.search(self.env["pkgname"]):
             raise ProcessorError("Invalid package name")
-        if self.env["output_pkg_name"].lower().endswith(".pkg"):
+        if self.env["pkgname"].lower().endswith(".pkg"):
             raise ProcessorError("Package name mustn't include '.pkg'")
 
         # Check ID.
@@ -231,8 +231,8 @@ class PkgBuilder(Processor):
     
     def create_pkg(self):
         pkg_dir = os.path.dirname( self.env[ "output_pkg_dir" ] )
-        pkgname = self.env[ "output_pkg_name" ]
-        pkgpath = os.path.join( pkg_dir, pkgname )
+        pkgname = self.env[ "pkgname" ]
+        pkgpath = os.path.join( pkg_dir, pkgname + ".pkg")
         
         # Remove existing pkg if it exists and is owned by uid.
         if os.path.exists(pkgpath):
@@ -251,7 +251,7 @@ class PkgBuilder(Processor):
                 )
         # Use a temporary name while building.
         temppkgname = (
-            f"autopkgtmp-{self.random_string(16)}-{self.env['output_pkg_name']}"
+            f"autopkgtmp-{self.random_string(16)}-{self.env['pkgname']}.pkg"
         )
         temppkgpath = os.path.join(self.env["output_pkg_dir"], temppkgname)
         # Wrap package building in try/finally to remove temporary package if
