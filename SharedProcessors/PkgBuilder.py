@@ -278,6 +278,7 @@ class PkgBuilder(Processor):
             if self.env["scripts"]:
                 cmd.extend(["--scripts", self.env["scripts"]])
             cmd.append(temppkgpath)
+            print(cmd)
             # Execute pkgbuild.
             try:
                 p = subprocess.Popen(
@@ -294,8 +295,18 @@ class PkgBuilder(Processor):
                     f"{' '.join(str(err).split())}"
                 )
             # Change to final name and owner.
-            os.rename(temppkgpath, pkgpath)
-            os.chown(pkgpath, self.uid, self.gid)
+            try:
+                os.rename(temppkgpath, pkgpath)
+            except OSError as e:
+                raise ProcessorError(
+                    f"Can't rename {temppkgpath} to {pkgpath}: {e.strerror}"
+                )
+            try:
+                os.chown(pkgpath, self.uid, self.gid)
+            except OSError as e:
+                raise ProcessorError(
+                    f"Can't change owner of {pkgpath} to {self.uid}: {e.strerror}"
+                )
 
             return pkgpath
         finally:
