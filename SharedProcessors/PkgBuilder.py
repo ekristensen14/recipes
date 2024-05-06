@@ -1,322 +1,279 @@
 #!/usr/local/autopkg/python
+#
+# Copyright 2010 Per Olofsson
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""See docstring for PkgCreator class"""
 
-import subprocess
-import os
+import os.path
 import plistlib
-import grp
-import pwd
-import re
-import shutil
-import stat
-import tempfile
-from xml.parsers.expat import ExpatError
+import socket
+import subprocess
+from xml.etree import ElementTree as ET
+
 from autopkglib import Processor, ProcessorError
+
+AUTO_PKG_SOCKET = "/Users/erebacz/Library/AutoPkg/RecipeRepos/com.github.ekristensen14.recipes/SharedProcessors/autopkgserver2"
+
 
 __all__ = ["PkgBuilder"]
 
+
 class PkgBuilder(Processor):
-    description = ( "Wraps pkg root into a component pkg using PkgBuild." )
-    __doc__ = description
+    """Calls autopkgserver to create a package."""
 
+    description = __doc__
     input_variables = {
-        "pkgroot": {
+        "pkg_request": {
             "required": True,
-            "description": "Path to the pkg root."
+            "description": (
+                "A package request dictionary. See "
+                "Code/autopkgserver/autopkgserver for more details."
+            ),
         },
-        "install-location": {
+        "force_pkg_build": {
             "required": False,
-            "description": "Path to the installation location."
-        },
-        "output_pkg_dir": {
-            "required": True,
-            "description": "Path to the output directory."
-        },
-        "pkgname": {
-            "required": True,
-            "description": "The name of the output distribution package."
-        },
-        "infofile": {
-            "required": False,
-            "description": "Path to the package info file."
-        },
-        "scripts": {
-            "required": False,
-            "description": "Path to the scripts directory."
-        },
-        "name": {
-            "required": True,
-            "description": "Name of the package."
-        },
-        "chown": {
-            "required": False,
-            "description": "Array of dictionaries containing path, user, group and mode keys."
-        },
-        "id": {
-            "required": True,
-            "description": "Package identifier."
-        },
-        "version": {
-            "required": True,
-            "description": "Package version."
+            "description": (
+                "When set, this forces building a new package even if "
+                "a package already exists in the output directory with "
+                "the same identifier and version number. Defaults to False"
+            ),
         },
     }
-    
     output_variables = {
-        "pkg_path": {
-             "description": "Path to the output distribution package."
-        }
+        "pkg_path": {"description": "The created package."},
+        "new_package_request": {
+            "description": (
+                "True if a new package was actually requested to be built. "
+                "False if a package with the same filename, identifier and "
+                "version already exists and thus no package was built (see "
+                "'force_pkg_build' input variable."
+            )
+        },
+        "pkg_creator_summary_result": {
+            "description": "Description of interesting results."
+        },
     }
-    
 
-    def main(self):
-        self.uid = os.getuid()
-        self.gid = os.getgid()
-        self.tmproot = None
-        self.re_pkgname = re.compile(r"^[a-z0-9][a-z0-9 ._\-]*$", re.I)
-        self.re_id = re.compile(r"^[a-z0-9]([a-z0-9 \-]*[a-z0-9])?$", re.I)
-        self.re_version = re.compile(r"^[a-z0-9_ ]*[0-9][a-z0-9_ -]*$", re.I)
+    def find_path_for_relpath(self, relpath):
+        """Searches for the relative path.
+        Search order is:
+            RECIPE_CACHE_DIR
+            RECIPE_DIR
+            PARENT_RECIPE directories"""
+        cache_dir = self.env.get("RECIPE_CACHE_DIR")
+        recipe_dir = self.env.get("RECIPE_DIR")
+        search_dirs = [cache_dir, recipe_dir]
+        if self.env.get("PARENT_RECIPES"):
+            # also look in the directories containing the parent recipes
+            parent_recipe_dirs = list(
+                {os.path.dirname(item) for item in self.env["PARENT_RECIPES"]}
+            )
+            search_dirs.extend(parent_recipe_dirs)
+        for directory in search_dirs:
+            test_item = os.path.join(directory, relpath)
+            if os.path.exists(test_item):
+                return os.path.normpath(test_item)
+
+        raise ProcessorError(f"Can't find {relpath}")
+
+    def xar_expand(self, source_path):
+        """Uses xar to expand an archive"""
+        try:
+            xarcmd = [
+                "/usr/bin/xar",
+                "-x",
+                "-C",
+                self.env.get("RECIPE_CACHE_DIR"),
+                "-f",
+                source_path,
+                "PackageInfo",
+            ]
+            proc = subprocess.Popen(
+                xarcmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+            )
+            (_, stderr) = proc.communicate()
+        except OSError as err:
+            raise ProcessorError(
+                f"xar execution failed with error code {err.errno}: {err.strerror}"
+            )
+        if proc.returncode != 0:
+            raise ProcessorError(
+                f"extraction of {source_path} with xar failed: {stderr}"
+            )
+
+    def pkg_already_exists(self, pkg_path, identifier, version):
+        """Check for an existing flat package in the output dir and compare its
+        identifier and version to the one we're going to build.
+        Returns a boolean."""
+        if os.path.exists(pkg_path) and not self.env.get("force_pkg_build"):
+            self.output(f"Package already exists at path {pkg_path}.")
+            try:
+                self.xar_expand(pkg_path)
+            except ProcessorError as err:
+                self.output(err)
+                # just remove the pkg and return False
+                self.output(f"Removing {pkg_path}")
+                try:
+                    os.unlink(pkg_path)
+                except OSError as err:
+                    raise ProcessorError(f"Could not remove {pkg_path}: {err}")
+                return False
+            packageinfo_file = os.path.join(self.env["RECIPE_CACHE_DIR"], "PackageInfo")
+            if not os.path.exists(packageinfo_file):
+                self.output(
+                    "Failed to parse existing package, as no PackageInfo "
+                    "file could be found in the extracted archive."
+                )
+                # just remove the pkg and return False
+                self.output(f"Removing {pkg_path}")
+                try:
+                    os.unlink(pkg_path)
+                except OSError as err:
+                    raise ProcessorError(f"Could not remove {pkg_path}: {err}")
+                return False
+            # parse the PackageInfo file for version and identifier
+            tree = ET.parse(packageinfo_file)
+            root = tree.getroot()
+            local_version = root.attrib["version"]
+            local_id = root.attrib["identifier"]
+            try:
+                # clean up
+                os.unlink(packageinfo_file)
+            except OSError:
+                pass
+            if local_version == version and local_id == identifier:
+                return True
+        return False
+
+    def package(self):
+        """Build a packaging request, send it to the autopkgserver and get the
+        constructed package."""
+
+        # clear any pre-existing summary result
+        if "pkg_creator_summary_result" in self.env:
+            del self.env["pkg_creator_summary_result"]
+
+        request = self.env["pkg_request"]
+        if "pkgdir" not in request:
+            request["pkgdir"] = self.env["RECIPE_CACHE_DIR"]
+
+        # Set variables, and check that all keys are in request.
         for key in (
             "pkgroot",
-            "output_pkg_dir",
             "pkgname",
-            "name",
+            "pkgtype",
             "id",
             "version",
-            "install-location",
             "infofile",
+            "resources",
+            "options",
             "scripts",
-            "chown",
         ):
-            if key in self.env:
-                self.env[key] = self.env[key]
-            elif key in ["install-location", "infofile", "scripts", "chown"]:
-                # Optional variables
-                self.env[key] = ""
-            else:
-                raise ProcessorError(f"Missing required input variable: {key}")
-            
-        try:
-            self.verify_env()
-            self.copy_pkgroot()
-            self.generateComponentPlist()
-            self.env["pkg_path"] = self.create_pkg()
-        finally:
-            self.cleanup()
-    
-    def verify_env(self):
-        # Check name.
-        if len(self.env["pkgname"]) > 80:
-            raise ProcessorError("Package name too long")
-        if not self.re_pkgname.search(self.env["pkgname"]):
-            raise ProcessorError("Invalid package name")
-        if self.env["pkgname"].lower().endswith(".pkg"):
-            raise ProcessorError("Package name mustn't include '.pkg'")
-
-        # Check ID.
-        if len(self.env["id"]) > 80:
-            raise ProcessorError("Package id too long")
-        components = self.env["id"].split(".")
-        if len(components) < 2:
-            raise ProcessorError("Invalid package id")
-        for comp in components:
-            if not self.re_id.search(comp):
-                raise ProcessorError("Invalid package id")
-
-        # Check version.
-        if len(self.env["version"]) > 40:
-            raise ProcessorError("Version too long")
-        components = self.env["version"].split(".")
-        if len(components) < 1:
-            raise ProcessorError(f"Invalid version \"{self.env['version']}\"")
-        for comp in components:
-            if not self.re_version.search(comp):
-                raise ProcessorError(f'Invalid version component "{comp}"')
-
-        # Make sure infofile and resources exist and can be read.
-        if self.env["infofile"]:
-            try:
-                with open(self.env["infofile"], "rb"):
-                    pass
-            except OSError as e:
-                raise ProcessorError(f"Can't open infofile: {e}")
-
-        # Make sure scripts is a directory and its contents
-        # are executable.
-        if self.env["scripts"]:
-            if self.env["pkgtype"] == "bundle":
-                raise ProcessorError(
-                    "Installer scripts are not supported with bundle package types."
-                )
-            if not os.path.isdir(self.env["scripts"]):
-                raise ProcessorError(
-                    f"Can't find scripts directory: {self.env['scripts']}"
-                )
-            for script in ["preinstall", "postinstall"]:
-                script_path = os.path.join(self.env["scripts"], script)
-                if os.path.exists(script_path) and not os.access(script_path, os.X_OK):
-                    raise ProcessorError(
-                        f"{script} script found in {self.env['scripts']} but it is "
-                        "not executable!"
-                    )
-        
-    def copy_pkgroot(self):
-        """Copy pkgroot to temporary directory."""
-        self.tmproot = tempfile.mkdtemp()
-        self.tmp_pkgroot = os.path.join(self.tmproot, self.env["name"])
-        os.mkdir(self.tmp_pkgroot)
-        try:
-            p = subprocess.Popen(
-                ("/usr/bin/ditto", self.env["pkgroot"], self.tmp_pkgroot),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            (_, err) = p.communicate()
-        except OSError as e:
-            raise ProcessorError(
-                f"ditto execution failed with error code {e.errno}: {e.strerror}"
-            )
-        if p.returncode != 0:
-            raise ProcessorError(
-                f"Couldn't copy pkgroot from {self.env['pkgroot']} to "
-                f"{self.tmp_pkgroot}: {' '.join(str(err).split())}"
-            )
-
-
-
-    def random_string(self, length):
-        rand = os.urandom(int((length + 1) / 2))
-        randstr = "".join(["%02x" % ord(c) for c in str(rand)])
-        return randstr[:length]
-    
-    def generateComponentPlist(self):
-        self.component_plist = os.path.join(self.tmproot, "component.plist")
-        try:
-            p = subprocess.Popen(
-                (
-                    "/usr/bin/pkgbuild",
-                    "--analyze",
-                    "--root",
-                    self.tmp_pkgroot,
-                    self.component_plist,
-                ),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            (_, err) = p.communicate()
-        except OSError as e:
-            raise ProcessorError(
-                f"pkgbuild execution failed with error code {e.errno}: {e.strerror}"
-            )
-        if p.returncode != 0:
-            raise ProcessorError(
-                f"pkgbuild failed with exit code {p.returncode}: "
-                f"{' '.join(str(err).split())}"
-            )
-        try:
-            with open(self.component_plist, "rb") as f:
-                plist = plistlib.load(f)
-        except BaseException:
-            raise ProcessorError(f"Couldn't read {self.component_plist}")
-        # plist is an array of dicts, iterate through
-        for bundle in plist:
-            if bundle.get("BundleIsRelocatable"):
-                bundle["BundleIsRelocatable"] = False
-        try:
-            with open(self.component_plist, "wb") as f:
-                plist = plistlib.dump(plist, f)
-        except BaseException:
-            raise ProcessorError(f"Couldn't write {self.component_plist}")
-    
-    def create_pkg(self):
-        pkg_dir = os.path.dirname( self.env[ "output_pkg_dir" ] )
-        pkgname = self.env[ "pkgname" ]
-        pkgpath = os.path.join( pkg_dir, pkgname + ".pkg")
-        
-        # Remove existing pkg if it exists and is owned by uid.
-        if os.path.exists(pkgpath):
-            try:
-                if os.lstat(pkgpath).st_uid != self.uid:
-                    raise ProcessorError(
-                        f"Existing pkg {pkgpath} not owned by {self.uid}"
-                    )
-                if os.path.islink(pkgpath) or os.path.isfile(pkgpath):
-                    os.remove(pkgpath)
+            if key not in request:
+                if key in self.env:
+                    request[key] = self.env[key]
+                elif key in ["infofile", "resources", "options", "scripts"]:
+                    # these keys are optional, so empty string value is OK
+                    request[key] = ""
+                elif key == "pkgtype":
+                    # we only support flat packages now
+                    request[key] = "flat"
                 else:
-                    shutil.rmtree(pkgpath)
-            except OSError as e:
-                raise ProcessorError(
-                    f"Can't remove existing pkg {pkgpath}: {e.strerror}"
-                )
-        # Use a temporary name while building.
-        temppkgname = (
-            f"autopkgtmp-{self.random_string(16)}-{self.env['pkgname']}.pkg"
-        )
-        temppkgpath = os.path.join(self.env["output_pkg_dir"], temppkgname)
-        # Wrap package building in try/finally to remove temporary package if
-        # it fails.
+                    raise ProcessorError(f"Request key {key} missing")
+
+        # Make sure chown array is present.
+        if "chown" not in request:
+            request["chown"] = []
+
+        # Convert relative paths to absolute.
+        for key, value in list(request.items()):
+            if key in ("pkgroot", "pkgdir", "infofile", "resources", "scripts"):
+                if value and not value.startswith("/"):
+                    # search for it
+                    request[key] = self.find_path_for_relpath(value)
+
+        # Check for an existing flat package in the output dir and compare its
+        # identifier and version to the one we're going to build.
+        pkg_path = os.path.join(request["pkgdir"], request["pkgname"] + ".pkg")
+        if self.pkg_already_exists(pkg_path, request["id"], request["version"]):
+            self.output(
+                "Existing package matches version and identifier, not building."
+            )
+            self.env["pkg_path"] = pkg_path
+            self.env["new_package_request"] = False
+            return
+
+        # Send packaging request.
         try:
-            # make a pkgbuild cmd
-            cmd = [
-                "/usr/bin/pkgbuild",
-                "--root",
-                self.tmp_pkgroot,
-                "--identifier",
-                self.env["id"],
-                "--version",
-                self.env["version"],
-                "--ownership",
-                "preserve",
-                "--component-plist",
-                self.component_plist,
-            ]
-            if self.env["install-location"]:
-                cmd.extend(["--install-location", self.env["install-location"]])
-            if self.env["infofile"]:
-                cmd.extend(["--info", self.env["infofile"]])
-            if self.env["scripts"]:
-                cmd.extend(["--scripts", self.env["scripts"]])
-            cmd.append(pkgpath)
-            print(cmd)
-            # Execute pkgbuild.
-            try:
-                p = subprocess.Popen(
-                    cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-                )
-                (_, err) = p.communicate()
-            except OSError as e:
-                raise ProcessorError(
-                    f"pkgbuild execution failed with error code {e.errno}: {e.strerror}"
-                )
-            if p.returncode != 0:
-                raise ProcessorError(
-                    f"pkgbuild failed with exit code {p.returncode}: "
-                    f"{' '.join(str(err).split())}"
-                )
-
-            return pkgpath
+            self.output("Connecting")
+            self.connect()
+            self.output("Sending packaging request")
+            self.env["new_package_request"] = True
+            pkg_path = self.send_request(request)
         finally:
-            if os.path.exists(temppkgpath):
-                try:
-                    if os.lstat(temppkgpath).st_uid != self.uid:
-                        raise ProcessorError(
-                            f"Temporary pkg {temppkgpath} not owned by {self.uid}"
-                        )
-                    if os.path.islink(temppkgpath) or os.path.isfile(temppkgpath):
-                        os.remove(temppkgpath)
-                    else:
-                        shutil.rmtree(temppkgpath)
-                except OSError as e:
-                    raise ProcessorError(
-                        f"Can't remove temporary pkg {temppkgpath}: {e.strerror}"
-                    )
-    def cleanup(self):
-        """Clean up resources."""
+            self.output("Disconnecting")
+            self.disconnect()
 
-        if self.tmproot:
-            shutil.rmtree(self.tmproot)
+        # Return path to pkg.
+        self.env["pkg_path"] = pkg_path
+        self.env["pkg_creator_summary_result"] = {
+            "summary_text": "The following packages were built:",
+            "report_fields": ["identifier", "version", "pkg_path"],
+            "data": {
+                "identifier": request["id"],
+                "version": request["version"],
+                "pkg_path": pkg_path,
+            },
+        }
 
-if __name__ == '__main__':
-    processor = PkgBuilder()
-    processor.main()
+    def connect(self):
+        """Connect to autopkgserver"""
+        try:
+            self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            self.socket.connect(AUTO_PKG_SOCKET)
+        except OSError as err:
+            raise ProcessorError(
+                "Unable to contact autopkgserver socket. "
+                "The launchd com.github.autopkg.autopkgserver is most likely not "
+                "loaded or running."
+                f"\nError message: {err.strerror}"
+            )
+
+    def send_request(self, request):
+        """Send a packaging request to the autopkgserver"""
+        self.socket.send(plistlib.dumps(request))
+        with os.fdopen(self.socket.fileno()) as fileref:
+            reply = fileref.read()
+        if reply.startswith("OK:"):
+            return reply.replace("OK:", "").rstrip()
+        errors = reply.rstrip().split("\n")
+        if not errors:
+            errors = ["ERROR:No reply from server (crash?), check system logs"]
+        raise ProcessorError(", ".join([s.replace("ERROR:", "") for s in errors]))
+
+    def disconnect(self):
+        """Disconnect from the autopkgserver"""
+        try:
+            self.socket.close()
+        except OSError as e:
+            self.output(f"Failed to close socket: {e}", verbose_level=2)
+
+    def main(self):
+        """Package something!"""
+        self.package()
+
+
+if __name__ == "__main__":
+    PROCESSOR = PkgBuilder()
+    PROCESSOR.execute_shell()

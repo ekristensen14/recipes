@@ -64,33 +64,32 @@
             <key>Processor</key>
             <string>com.github.ekristensen14.SharedProcessors/PkgBuilder</string>
             <key>Arguments</key>
-            <dict>
-                <key>pkgroot</key>
-                <string>%pkgroot%</string>
-                <key>install-location</key>
-                <string>/Applications</string>
-                <key>output_pkg_dir</key>
-                <string>%RECIPE_CACHE_DIR%</string>
-                <key>chown</key>
-                <array>
-                    <dict>
-                        <key>path</key>
-                        <string>Applications</string>
-                        <key>user</key>
-                        <string>root</string>
-                        <key>group</key>
-                        <string>admin</string>
-                    </dict>
-                </array>
-                <key>pkgname</key>
-                <string>%NAME%-%version%</string>
-                <key>name</key>
-                <string>%NAME%</string>
-                <key>version</key>
-                <string>%version%</string>
-                <key>id</key>
-                <string>%bundleid%</string>
-            </dict>
+			<dict>
+				<key>pkg_request</key>
+				<dict>
+					<key>chown</key>
+					<array>
+						<dict>
+							<key>group</key>
+							<string>admin</string>
+							<key>path</key>
+							<string>Applications</string>
+							<key>user</key>
+							<string>root</string>
+						</dict>
+					</array>
+					<key>id</key>
+					<string>%BUNDLE_ID%</string>
+					<key>options</key>
+					<string>purge_ds_store</string>
+					<key>pkgname</key>
+					<string>%NAME%-%version%</string>
+					<key>version</key>
+					<string>%version%</string>
+                    <key>install_location</key>
+                    <string>/Applications</string>
+				</dict>
+			</dict>
         </dict>
         <dict>
           <key>Processor</key>
