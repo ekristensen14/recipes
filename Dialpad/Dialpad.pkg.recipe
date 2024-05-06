@@ -37,11 +37,48 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>AppPkgCreator</string>
+            <string>PkgRootCreator</string>
             <key>Arguments</key>
             <dict>
-                <key>app_path</key>
-                <string>%pathname%/Dialpad.app</string>
+                <key>pkgroot</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%</string>
+                <key>pkgdirs</key>
+                <dict>
+                    <key>Applications</key>
+                    <string>0775</string>
+                </dict>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%/%NAME%.app</string>
+                <key>destination_path</key>
+                <string>%pkgroot%/Applications/%NAME%.app</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.ekristensen14.SharedProcessors/PkgBuilder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkgroot</key>
+                <string>%pkgroot%</string>
+                <key>install-location</key>
+                <string>/Applications</string>
+                <key>output_pkg_dir</key>
+                <string>%RECIPE_CACHE_DIR%</string>
+                <key>output_pkg_name</key>
+                <string>%NAME%-%version%.pkg</string>
+                <key>name</key>
+                <string>%NAME%</string>
+                <key>version</key>
+                <string>%version%</string>
+                <key>id</key>
+                <string>%bundleid%</string>
             </dict>
         </dict>
         <dict>
