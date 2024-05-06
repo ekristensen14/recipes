@@ -83,8 +83,14 @@ class PkgBuilder(Processor):
         self.tmproot = tempfile.mkdtemp()
         self.tmp_pkgroot = os.path.join(self.tmproot, self.env["name"])
         os.mkdir(self.tmp_pkgroot)
-        os.chmod(self.tmp_pkgroot, 0o1775)
-        os.chown(self.tmp_pkgroot, 0, 80)
+        try:
+            os.chmod(self.tmp_pkgroot, 0o1775)
+        except OSError as e:
+            raise ProcessorError(f"Can't chmod {self.tmp_pkgroot}: {e}")
+        try:
+            os.chown(self.tmp_pkgroot, 0, 80)
+        except OSError as e:
+            raise ProcessorError(f"Can't chown {self.tmp_pkgroot}: {e}")
         try:
             p = subprocess.Popen(
                 ("/usr/bin/ditto", self.env["pkgroot"], self.tmp_pkgroot),
