@@ -22,20 +22,18 @@
         <array>
             <string>Productivity</string>
         </array>
-        <key>SIGNINGCERTIFICATE</key>
-        <string>Put_Signing_Certificate_into_AutoPkg_recipe_override</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
-	<string>com.github.ekristensen14.pkg.Dialpad</string>
+	<string>com.github.ekristensen14.Download.Dialpad</string>
 	<key>Process</key>
 	<array>
         <dict>
             <key>Arguments</key>
             <dict>
                 <key>app_file</key>
-                <string>%pkgroot%/%NAME%.app</string>
+                <string>%pathname%/%NAME%.app</string>
                 <key>name</key>
                 <string>%NAME%</string>
             </dict>
@@ -46,7 +44,7 @@
             <key>Arguments</key>
             <dict>
                 <key>app_file</key>
-                <string>%pkg_path%</string>
+                <string>%pathname%</string>
                 <key>displayname</key>
                 <string>%display_namee%</string>
                 <key>description</key>
