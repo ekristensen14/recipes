@@ -6,7 +6,7 @@
 	<key>Description</key>
 	<string>Downloads the current version of FileZilla. Specify the channel via %NAME%.</string>
 	<key>Identifier</key>
-	<string>com.github.ekristensen14.download.FileZilla</string>
+	<string>com.github.ekristensen14.download.filezilla</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
