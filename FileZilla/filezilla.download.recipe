@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -6,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads the current version of FileZilla. Specify the channel via %NAME%.</string>
 	<key>Identifier</key>
-	<string>com.github.ekristensen14.download.filezilla</string>
+	<string>com.github.ekristensen14.download.FileZilla</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
