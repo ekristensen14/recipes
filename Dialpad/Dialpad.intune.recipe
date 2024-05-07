@@ -26,7 +26,7 @@
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
-	<string>com.github.ekristensen14.Download.Dialpad</string>
+	<string>com.github.ekristensen14.download.Dialpad</string>
 	<key>Process</key>
 	<array>
         <dict>
