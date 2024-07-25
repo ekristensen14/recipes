@@ -21,7 +21,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>filename</key>
-				<string>%NAME%.zip</string>
+				<string>%NAME%-%PLATFORM_ARCH%.zip</string>
 				<key>url</key>
 				<string>https://dl.pstmn.io/download/latest/osx_%PLATFORM_ARCH%</string>
 			</dict>
@@ -38,7 +38,7 @@
 				<key>archive_path</key>
 				<string>%pathname%</string>
 				<key>destination_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%</string>
+				<string>%RECIPE_CACHE_DIR%/%NAME%-%PLATFORM_ARCH%/</string>
 				<key>purge_destination</key>
 				<true/>
 			</dict>
