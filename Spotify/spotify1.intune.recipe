@@ -43,6 +43,15 @@ For Intel leave DOWNLOAD_ARCH empty and set SUPPORTED_ARCH to "x86_64"</string>
 		<dict>
 			<key>Arguments</key>
 			<dict>
+				<key>app_path</key>
+				<string>%pathname%/%NAME%.app</string>
+			</dict>
+			<key>Processor</key>
+			<string>AppPkgCreator</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
 				<key>app_file</key>
 				<string>%pathname%</string>
 				<key>name</key>
@@ -55,7 +64,7 @@ For Intel leave DOWNLOAD_ARCH empty and set SUPPORTED_ARCH to "x86_64"</string>
 			<key>Arguments</key>
 			<dict>
 				<key>app_file</key>
-				<string>%pathname%</string>
+				<string>%pkg_path%</string>
 				<key>bundleId</key>
 				<string>%bundleid%</string>
 				<key>bundleVersion</key>

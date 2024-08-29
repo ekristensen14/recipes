@@ -47,6 +47,15 @@
 			<key>Processor</key>
 			<string>AppDmgVersioner</string>
 		</dict>
+        <dict>
+			<key>Arguments</key>
+			<dict>
+				<key>app_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%/Visual Studio Code.app</string>
+			</dict>
+			<key>Processor</key>
+			<string>AppPkgCreator</string>
+		</dict>
 		<dict>
 			<key>Arguments</key>
 			<dict>
@@ -62,7 +71,7 @@
             <key>Arguments</key>
             <dict>
                 <key>app_file</key>
-                <string>%RECIPE_CACHE_DIR%/%NAME%.dmg</string>
+                <string>%pkg_path%</string>
                 <key>displayname</key>
                 <string>%display_namee%</string>
                 <key>description</key>
