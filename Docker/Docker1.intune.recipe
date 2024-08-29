@@ -42,7 +42,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>app_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
+				<string>%dmg_path%/%NAME%.app</string>
 			</dict>
 			<key>Processor</key>
 			<string>AppPkgCreator</string>
@@ -51,7 +51,7 @@
             <key>Arguments</key>
             <dict>
                 <key>app_file</key>
-                <string>%pathname%/Docker.app</string>
+                <string>%pathname%/%NAME%.app</string>
                 <key>name</key>
                 <string>%NAME%</string>
             </dict>
