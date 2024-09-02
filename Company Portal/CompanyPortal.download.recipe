@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest Microsoft Company Portal pkg</string>
+    <key>Identifier</key>
+    <string>com.github.ekristensen14.download.CompanyPortal</string>
+    <key>MinimumVersion</key>
+    <string>1.4</string>
+    <key>Input</key>
+    <dict>
+        <key>CHANNEL</key>
+        <string>Production</string>
+        <key>LOCALE_ID</key>
+        <string>1033</string>
+        <key>NAME</key>
+        <string>CompanyPortal</string>
+        <key>PRODUCT</key>
+        <string>CompanyPortal</string>
+        <key>VERSION</key>
+        <string>latest</string>
+    </dict>
+    <key>ParentRecipe</key>
+    <string>com.github.autopkg.download.MSOfficeMacProduct</string>
+</dict>
+</plist>

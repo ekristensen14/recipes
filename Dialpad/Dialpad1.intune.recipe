@@ -51,7 +51,7 @@
             <key>Arguments</key>
             <dict>
                 <key>app_file</key>
-                <string>%pathname%/%NAME%.app</string>
+                <string>%pathname%/%NAME%</string>
                 <key>name</key>
                 <string>%NAME%</string>
             </dict>
